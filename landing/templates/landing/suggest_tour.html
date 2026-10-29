@@ -1,0 +1,234 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% block title %}Предложить экскурсию или тур — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-sug-page" id="vb-sug-tour" data-section-name="Предложить экскурсию или тур" aria-label="Предложить экскурсию или тур">
+ <div class="vb-sug-page__inner">
+  <nav class="vb-sug-crumbs" aria-label="Навигация по сайту">
+   <a href="{% url 'index' %}">Главная</a> <span class="vb-sug-crumbs__sep" aria-hidden="true">›</span>
+   <a href="{% url 'tourism' %}">Туризм</a> <span class="vb-sug-crumbs__sep" aria-hidden="true">›</span>
+   <span class="vb-sug-crumbs__current">Предложить экскурсию или тур</span>
+  </nav>
+  <header class="vb-sug-head">
+   <h1 class="vb-sug-head__title">Предложите экскурсию или тур</h1>
+   <p class="vb-sug-head__sub">Это бесплатно. Заполните форму — мы опубликуем предложение после короткой проверки. Обычно это занимает до 24 часов.</p>
+  </header>
+  <form class="vb-sug-form" id="vb-sug-tour-form" action="#" method="get" novalidate>
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-kind">Тип <span class="vb-sug-form__req">*</span></label>
+     <select class="vb-sug-form__select" id="st-kind" name="kind" required="">
+      <option value="">Выберите тип</option>
+      <option>Экскурсия</option>
+      <option>Поход и треккинг</option>
+      <option>Тур (многодневный)</option>
+      <option>Другое</option>
+     </select>
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-title">Название <span class="vb-sug-form__req">*</span></label>
+     <input class="vb-sug-form__input" id="st-title" type="text" name="title" placeholder="Например: Чегемские водопады и Верхняя Балкария" required="">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__field">
+    <label class="vb-sug-form__label" for="st-desc">Короткое описание <span class="vb-sug-form__req">*</span></label>
+    <textarea class="vb-sug-form__textarea" id="st-desc" name="description" rows="4" placeholder="2–3 строки: что увидите, чем уникально, что взять с собой" required=""></textarea>
+   </div>
+
+   <div class="vb-sug-form__field">
+    <label class="vb-sug-form__label" for="st-program">Программа / маршрут по дням</label>
+    <textarea class="vb-sug-form__textarea" id="st-program" name="program" rows="4" placeholder="Для многодневных туров: маршрут по дням, что включено (питание, ночёвки, трансфер)"></textarea>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-duration">Длительность</label>
+     <select class="vb-sug-form__select" id="st-duration" name="duration_group">
+      <option value="">Выберите</option>
+      <option>2–4 часа</option>
+      <option>Полдня</option>
+      <option>Целый день</option>
+      <option>Многодневный</option>
+     </select>
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-duration-text">Длительность текстом</label>
+     <input class="vb-sug-form__input" id="st-duration-text" type="text" name="duration_text" placeholder="Например: 8 часов  или  3 дня / 2 ночи">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-format">Формат</label>
+     <select class="vb-sug-form__select" id="st-format" name="format">
+      <option value="">Выберите</option>
+      <option>Индивидуальная</option>
+      <option>Групповая</option>
+      <option>Мини-группа</option>
+     </select>
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-transport">Как передвигаемся</label>
+     <input class="vb-sug-form__input" id="st-transport" type="text" name="transport" placeholder="На машине / пешком / велосипед">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-people">Максимум человек</label>
+     <input class="vb-sug-form__input" id="st-people" type="number" name="max_people" min="1" placeholder="Например: 6">
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-distance">Длина маршрута, км</label>
+     <input class="vb-sug-form__input" id="st-distance" type="number" name="distance_km" min="1" placeholder="Для походов, например: 12">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-difficulty">Сложность (для походов)</label>
+     <select class="vb-sug-form__select" id="st-difficulty" name="difficulty">
+      <option value="">Выберите</option>
+      <option>Лёгкий</option>
+      <option>Средний</option>
+      <option>Сложный</option>
+     </select>
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-other">Вид (для «Другого»)</label>
+     <select class="vb-sug-form__select" id="st-other" name="other_type">
+      <option value="">Выберите</option>
+      <option>Вело</option>
+      <option>Фото</option>
+      <option>Еда</option>
+      <option>Джиппинг</option>
+      <option>Снаряжение</option>
+     </select>
+    </div>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-price">Цена, ₽</label>
+     <input class="vb-sug-form__input" id="st-price" type="number" name="price" min="0" placeholder="Например: 3500">
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-price-unit">Подпись к цене</label>
+     <input class="vb-sug-form__input" id="st-price-unit" type="text" name="price_unit" placeholder="₽/чел  или  ₽">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-place">Туристическое место</label>
+     <input class="vb-sug-form__input" id="st-place" type="text" name="place" placeholder="Например: Чегемские водопады">
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-guide">Гид</label>
+     <input class="vb-sug-form__input" id="st-guide" type="text" name="guide" placeholder="Имя гида, если есть">
+    </div>
+   </div>
+
+   <div class="vb-sug-form__field">
+    <label class="vb-sug-form__label" for="st-photo">Фото</label>
+    <input class="vb-sug-form__input" id="st-photo" type="url" name="photo" placeholder="Вставьте ссылку на фото">
+    <p class="vb-sug-form__hint">Загрузите фото заранее на любой хостинг и вставьте ссылку. Лучше горизонтальное, 16:9.</p>
+   </div>
+
+   <div class="vb-sug-form__row">
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-name">Ваше имя <span class="vb-sug-form__req">*</span></label>
+     <input class="vb-sug-form__input" id="st-name" type="text" name="name" placeholder="Как к вам обращаться" required="">
+    </div>
+    <div class="vb-sug-form__field">
+     <label class="vb-sug-form__label" for="st-contact">Телефон или email <span class="vb-sug-form__req">*</span></label>
+     <input class="vb-sug-form__input" id="st-contact" type="text" name="contact" placeholder="+7 (___) ___-__-__ или email" required="">
+    </div>
+   </div>
+
+   <label class="vb-sug-form__check">
+    <input type="checkbox" name="agree" required="">
+    <span>Я согласен с правилами публикации и обработкой персональных данных</span>
+   </label>
+
+   <div class="vb-sug-form__submit">
+    <button class="vb-sug-form__btn" type="submit">Отправить на модерацию</button>
+    <p class="vb-sug-form__hint vb-sug-form__hint--center">После отправки мы свяжемся с вами по указанным контактам.</p>
+   </div>
+
+   <div class="vb-sug-form__success" id="vb-sug-tour-success" role="status" hidden>Спасибо! Ваша заявка отправлена на модерацию. Мы свяжемся с вами по указанным контактам.</div>
+  </form>
+
+  <section class="vb-sug-contacts" aria-labelledby="vb-sug-tour-contacts-title">
+   <h2 class="vb-sug-contacts__title" id="vb-sug-tour-contacts-title">Связаться с редакцией</h2>
+   <p class="vb-sug-contacts__text">Если удобнее написать напрямую — мы на связи:</p>
+   <div class="vb-sug-contacts__row">
+    <a class="vb-sug-contacts__item" href="mailto:hello@nalchik-afisha.ru">
+     <img src="{% static 'landing/img/icons/mail.svg' %}" alt="" aria-hidden="true">
+     <span>hello@nalchik-afisha.ru</span>
+    </a>
+    <a class="vb-sug-contacts__item" href="https://t.me/nalchik_afisha" target="_blank" rel="noopener">
+     <img src="{% static 'landing/img/icons/mail.svg' %}" alt="" aria-hidden="true">
+     <span>Telegram: @nalchik_afisha</span>
+    </a>
+   </div>
+  </section>
+ </div>
+</section>
+<style>
+.vb-sug-page,.vb-sug-page * { box-sizing: border-box; }
+.vb-sug-page input,.vb-sug-page textarea,.vb-sug-page select { font: inherit; }
+.vb-sug-page { background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 100%); padding: 32px 0 64px; font-family: var(--t-text-font), system-ui, sans-serif; }
+.vb-sug-page__inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+.vb-sug-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+.vb-sug-crumbs a { color: #4a90e2; text-decoration: none; transition: color 0.15s; }
+.vb-sug-crumbs a:hover { color: #2a5db0; }
+.vb-sug-crumbs__sep { color: #cbd2dc; }
+.vb-sug-crumbs__current { color: #0f172a; font-weight: 500; }
+.vb-sug-head { margin-bottom: 28px; max-width: 760px; }
+.vb-sug-head__title { font-family: var(--t-headline-font), sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.025em; color: #0f172a; margin: 0 0 14px; line-height: 1.1; }
+.vb-sug-head__sub { font-size: 17px; line-height: 1.55; color: #475569; margin: 0 0 18px; }
+.vb-sug-form { background: #ffffff; border: 1px solid #eef0f3; border-radius: 20px; padding: 32px 34px; display: flex; flex-direction: column; gap: 18px; }
+.vb-sug-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.vb-sug-form__field { display: flex; flex-direction: column; gap: 8px; }
+.vb-sug-form__label { font-size: 14px; font-weight: 600; color: #0f172a; }
+.vb-sug-form__req { color: #e0394c; }
+.vb-sug-form__input,.vb-sug-form__select,.vb-sug-form__textarea { font-family: var(--t-text-font), system-ui, sans-serif; font-size: 15px; color: #0f172a; background: #ffffff; border: 1px solid #e2e6ee; border-radius: 12px; padding: 12px 14px; outline: 0; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; }
+.vb-sug-form__textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+.vb-sug-form__input:focus,.vb-sug-form__select:focus,.vb-sug-form__textarea:focus { border-color: #1FAE63; box-shadow: 0 0 0 3px rgba(31, 174, 99, 0.15); }
+.vb-sug-form__input::placeholder,.vb-sug-form__textarea::placeholder { color: #8a93a3; }
+.vb-sug-form__hint { font-size: 13px; color: #8a93a3; margin: 4px 0 0; line-height: 1.5; }
+.vb-sug-form__hint--center { text-align: center; }
+.vb-sug-form__check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #475569; line-height: 1.5; }
+.vb-sug-form__check input { margin-top: 3px; width: 16px; height: 16px; accent-color: #1FAE63; flex-shrink: 0; }
+.vb-sug-form__submit { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 8px; }
+.vb-sug-form__btn { font-family: var(--t-text-font), system-ui, sans-serif; font-size: 16px; font-weight: 600; color: #ffffff; background: #1FAE63; border: 0; border-radius: 12px; padding: 14px 32px; cursor: pointer; transition: background 0.15s, transform 0.15s; }
+.vb-sug-form__btn:hover { background: #189652; transform: translateY(-1px); }
+.vb-sug-contacts { background: #ffffff; border: 1px solid #eef0f3; border-radius: 20px; padding: 28px 34px; margin-top: 24px; }
+.vb-sug-contacts__title { font-family: var(--t-headline-font), sans-serif; font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 8px; letter-spacing: -0.01em; }
+.vb-sug-contacts__text { font-size: 15px; color: #475569; margin: 0 0 16px; }
+.vb-sug-contacts__row { display: flex; flex-wrap: wrap; gap: 10px; }
+.vb-sug-contacts__item { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: #f3f5f8; border: 1px solid #e2e6ee; color: #0f172a; text-decoration: none; font-size: 14px; font-weight: 500; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.vb-sug-contacts__item:hover { background: #e6f7ee; border-color: #1FAE63; color: #0e7a3f; }
+.vb-sug-contacts__item img { width: 16px; height: 16px; opacity: 0.7; }
+@media (max-width: 960px) { .vb-sug-page__inner { padding: 0 18px; } .vb-sug-head__title { font-size: 30px; } .vb-sug-form { padding: 24px 22px; } .vb-sug-form__row { grid-template-columns: 1fr; } .vb-sug-contacts { padding: 22px; } }
+@media (max-width: 640px) { .vb-sug-head__title { font-size: 24px; } .vb-sug-form__btn { width: 100%; } }
+.vb-sug-form__success { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: #e6f7ee; color: #0e7a3f; font-weight: 600; line-height: 1.5; }
+.vb-sug-form__success[hidden] { display: none; }
+</style>
+<script>
+(function() {
+  var form = document.getElementById('vb-sug-tour-form');
+  var ok = document.getElementById('vb-sug-tour-success');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    ok.hidden = false;
+    form.reset();
+    ok.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+})();
+</script>
+{% endblock %}

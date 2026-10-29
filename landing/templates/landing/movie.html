@@ -1,0 +1,131 @@
+{% extends "landing/base.html" %}
+{% block title %}{{ movie.title }} — Кино — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-flm-page" id="vb-flm-page" data-section-name="Карточка фильма" aria-label="Карточка фильма" data-vibeblock-unique-section="yes">
+ <div class="vb-flm-page__inner">
+  <nav class="vb-flm-crumbs" aria-label="Навигация по сайту">
+   <a href="{% url 'index' %}">Главная</a> <span class="vb-flm-crumbs__sep" aria-hidden="true">›</span>
+   <a href="{% url 'kino' %}">Кино</a> <span class="vb-flm-crumbs__sep" aria-hidden="true">›</span>
+   <span class="vb-flm-crumbs__current">{{ movie.title }}</span>
+  </nav>
+  <header class="vb-flm-hero">
+   <div class="vb-flm-hero__poster">
+    {% if movie.image_url %}<img src="{{ movie.image_url }}" alt="{{ movie.title }}" loading="eager">{% endif %}
+    <span class="vb-flm-hero__age">{{ movie.age }}</span>
+    {% if movie.premiere %}<span class="vb-flm-hero__premiere">Премьера</span>{% endif %}
+   </div>
+   <div class="vb-flm-hero__body">
+    {% if movie.genre %}<span class="vb-flm-hero__genre">{{ movie.genre }}</span>{% endif %}
+    <h1 class="vb-flm-hero__title">{{ movie.title }}</h1>
+    <ul class="vb-flm-hero__facts">{% if movie.year %}<li>{{ movie.year }}</li>{% endif %}{% if movie.duration %}<li>{{ movie.duration }} мин</li>{% endif %}{% if movie.country %}<li>{{ movie.country }}</li>{% endif %}<li>{{ movie.age }}</li></ul>
+    {% if movie.lead %}<p class="vb-flm-hero__lead">{{ movie.lead }}</p>{% elif movie.description %}<p class="vb-flm-hero__lead">{{ movie.description|truncatewords:30 }}</p>{% endif %}
+    <div class="vb-flm-hero__price-row">
+     <span class="vb-flm-hero__price"><strong>{{ movie.price }}</strong></span>
+    </div>
+    <div class="vb-flm-hero__actions">
+     <a class="t-btnflex t-btnflex_lg vb-flm-btn vb-flm-btn--primary" href="#vb-flm-seances"><span class="t-btnflex__text">Купить билет</span></a>
+     <button class="vb-flm-btn vb-flm-btn--ghost" type="button"><span>В избранное</span></button>
+     <button class="vb-flm-btn vb-flm-btn--ghost" type="button"><span>Поделиться</span></button>
+    </div>
+   </div>
+  </header>
+  {% if movie.description or movie.lead %}<section class="vb-flm-block" aria-labelledby="vb-flm-about-title">
+   <h2 class="vb-flm-block__title" id="vb-flm-about-title">О фильме</h2>
+   <div class="vb-flm-block__text">{% if movie.description %}{{ movie.description|linebreaks }}{% else %}<p>{{ movie.lead }}</p>{% endif %}</div>
+  </section>{% endif %}
+  {% with actors=movie.actors.all %}{% if actors %}<section class="vb-flm-block" aria-labelledby="vb-flm-cast-title">
+   <h2 class="vb-flm-block__title" id="vb-flm-cast-title">Актёры</h2>
+   <ul class="vb-flm-cast">{% for a in actors %}<li class="vb-flm-cast__item"><span class="vb-flm-cast__name">{{ a.name }}</span>{% if a.role %}<span class="vb-flm-cast__role">{{ a.role }}</span>{% endif %}</li>{% endfor %}</ul>
+  </section>{% endif %}{% endwith %}
+  <section class="vb-flm-block" id="vb-flm-seances" aria-labelledby="vb-flm-seances-title">
+   <h2 class="vb-flm-block__title" id="vb-flm-seances-title">Сеансы и билеты</h2>
+   <div class="vb-flm-cinema">
+    <div class="vb-flm-cinema__head">
+     <div class="vb-flm-cinema__name">{{ movie.cinema }}</div>
+    </div>
+    <ul class="vb-flm-cinema__times">
+     {% for s in movie.sessions.all %}<li class="vb-flm-show"><span class="vb-flm-show__time">{{ s.time|time:"H:i" }}</span> <span class="vb-flm-show__format">{{ s.format|default:"2D" }}</span> <span class="vb-flm-show__price">{{ s.price|default:movie.price }}</span> <a class="vb-flm-show__btn" href="#">Купить</a></li>
+     {% empty %}{% for t in movie.times_list %}<li class="vb-flm-show"><span class="vb-flm-show__time">{{ t }}</span> <span class="vb-flm-show__format">2D</span> <span class="vb-flm-show__price">{{ movie.price }}</span> <a class="vb-flm-show__btn" href="#">Купить</a></li>
+     {% empty %}<li style="list-style:none;color:#6b7280;">Сеансы пока не добавлены</li>{% endfor %}{% endfor %}
+    </ul>
+   </div>
+   <p class="vb-flm-seances__note">Оплата проходит на защищённой странице. Возврат билетов — не позднее чем за 3 часа до начала сеанса.</p>
+  </section>
+ </div>
+</section>
+<style>
+.vb-flm-page,.vb-flm-page * { box-sizing: border-box; }
+.vb-flm-page input,.vb-flm-page textarea,.vb-flm-page select { font: inherit; }
+.vb-flm-page { background: linear-gradient(180deg, #eafaf1 0%, #ffffff 100%); padding: 32px 0 64px; font-family: var(--t-text-font), system-ui, sans-serif; }
+.vb-flm-page__inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+.vb-flm-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+.vb-flm-crumbs a { color: #1FAE63; text-decoration: none; transition: color 0.15s; }
+.vb-flm-crumbs a:hover { color: #0e7a3f; }
+.vb-flm-crumbs__sep { color: #cbd2dc; }
+.vb-flm-crumbs__current { color: #0f172a; font-weight: 500; }
+
+.vb-flm-hero { background: #ffffff; border: 1px solid #eef0f3; border-radius: 20px; overflow: hidden; display: grid; grid-template-columns: 340px 1fr; margin-bottom: 28px; }
+.vb-flm-hero__poster { position: relative; background: #1e293b; min-height: 420px; }
+.vb-flm-hero__poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vb-flm-hero__age { position: absolute; top: 14px; left: 14px; font-size: 11px; font-weight: 700; color: #ffffff; background: rgba(15, 23, 42, 0.78); padding: 5px 10px; border-radius: 999px; backdrop-filter: blur(6px); letter-spacing: 0.04em; }
+.vb-flm-hero__premiere { position: absolute; top: 14px; right: 14px; font-size: 11px; font-weight: 700; color: #ffffff; background: rgba(224, 57, 76, 0.55); backdrop-filter: blur(6px); padding: 5px 10px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
+.vb-flm-hero__body { padding: 32px 34px 28px; display: flex; flex-direction: column; }
+.vb-flm-hero__genre { display: inline-block; font-size: 13px; font-weight: 600; color: #1FAE63; margin-bottom: 10px; letter-spacing: 0.02em; }
+.vb-flm-hero__title { font-family: var(--t-headline-font), sans-serif; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; color: #0f172a; margin: 0 0 16px; }
+.vb-flm-hero__facts { list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.vb-flm-hero__facts li { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; background: #e6f7ee; color: #0e7a3f; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+.vb-flm-hero__lead { font-size: 16px; line-height: 1.6; color: #475569; margin: 0 0 20px; }
+.vb-flm-hero__price-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 16px 0; border-top: 1px dashed #e8ebf0; margin-bottom: 18px; }
+.vb-flm-hero__price { font-size: 15px; color: #475569; }
+.vb-flm-hero__price strong { font-family: var(--t-headline-font), sans-serif; color: #0f172a; font-weight: 700; font-size: 22px; }
+.vb-flm-hero__price-hint { font-size: 13px; color: #8a93a3; }
+.vb-flm-hero__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+
+.vb-flm-btn { border-radius: 12px; padding: 12px 22px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; cursor: pointer; font-family: var(--t-text-font), system-ui, sans-serif; transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s; }
+.vb-flm-btn--primary { background: #1FAE63; color: #ffffff !important; }
+.vb-flm-btn--primary:hover { background: #0e7a3f; transform: translateY(-1px); }
+.vb-flm-btn--primary .t-btnflex__text { color: #ffffff; }
+.vb-flm-btn--ghost { background: #ffffff; color: #0e7a3f !important; border-color: #bfe3cd; }
+.vb-flm-btn--ghost:hover { background: #e6f7ee; border-color: #1FAE63; }
+
+.vb-flm-block { background: #ffffff; border: 1px solid #eef0f3; border-radius: 20px; padding: 28px 34px; margin-bottom: 20px; }
+.vb-flm-block__title { font-family: var(--t-headline-font), sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: #0f172a; margin: 0 0 16px; }
+.vb-flm-block__text p { font-size: 15px; line-height: 1.65; color: #475569; margin: 0 0 12px; }
+.vb-flm-block__text p:last-child { margin-bottom: 0; }
+
+.vb-flm-cast { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.vb-flm-cast__item { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: #f8fafc; border: 1px solid #eef0f3; border-radius: 12px; }
+.vb-flm-cast__name { font-size: 14px; font-weight: 700; color: #0f172a; }
+.vb-flm-cast__role { font-size: 12px; color: #6b7280; }
+
+.vb-flm-cinema { border: 1px solid #eef0f3; border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; }
+.vb-flm-cinema:last-of-type { margin-bottom: 0; }
+.vb-flm-cinema__head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed #e8ebf0; }
+.vb-flm-cinema__name { font-family: var(--t-headline-font), sans-serif; font-size: 17px; font-weight: 700; color: #0f172a; }
+.vb-flm-cinema__addr { font-size: 13px; color: #6b7280; }
+.vb-flm-cinema__times { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.vb-flm-show { display: inline-grid; grid-template-columns: auto auto; align-items: center; gap: 4px 10px; padding: 10px 14px; background: #f8fafc; border: 1px solid #eef0f3; border-radius: 12px; }
+.vb-flm-show__time { font-family: var(--t-headline-font), sans-serif; font-size: 18px; font-weight: 700; color: #0f172a; grid-row: 1 / 3; }
+.vb-flm-show__format { font-size: 11px; font-weight: 600; color: #0e7a3f; background: #e6f7ee; padding: 2px 7px; border-radius: 5px; letter-spacing: 0.04em; justify-self: start; }
+.vb-flm-show__price { font-size: 13px; font-weight: 600; color: #475569; }
+.vb-flm-show__btn { grid-column: 2 / 3; font-size: 12px; font-weight: 600; color: #1FAE63; text-decoration: none; padding: 3px 8px; border-radius: 6px; background: rgba(31, 174, 99, 0.1); justify-self: start; }
+.vb-flm-show__btn:hover { background: #1FAE63; color: #ffffff; }
+
+.vb-flm-seances__note { font-size: 13px; color: #8a93a3; margin: 16px 0 0; line-height: 1.5; }
+
+@media (max-width: 960px) {
+  .vb-flm-page__inner { padding: 0 18px; }
+  .vb-flm-hero { grid-template-columns: 1fr; }
+  .vb-flm-hero__poster { min-height: 320px; }
+  .vb-flm-hero__body { padding: 24px 22px; }
+  .vb-flm-hero__title { font-size: 26px; }
+  .vb-flm-block { padding: 22px; }
+  .vb-flm-cast { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .vb-flm-hero__title { font-size: 22px; }
+  .vb-flm-cast { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

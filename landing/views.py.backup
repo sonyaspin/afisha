@@ -1,0 +1,48 @@
+# landing/views.py
+from datetime import timedelta
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+
+from .models import Event, Movie 
+
+def _days(n=14):
+    """Даты для календарной ленты: сегодня + следующие n-1 дней."""
+    today = timezone.localdate()
+    return [today + timedelta(days=i) for i in range(n)]
+
+
+def index(request):
+    
+    context = {
+        
+        'latest_events': Event.objects.all()[:3],
+        'latest_movies': Movie.objects.all()[:8],
+        'events_count': Event.objects.count(),
+        'days': _days(),
+    }
+    return render(request, 'landing/index.html', context)
+
+
+def afisha(request):
+    events = Event.objects.all()
+    return render(request, 'landing/afisha.html', {
+        'events': events,
+        'free_count': events.filter(tag='Бесплатно').count(),
+    })
+
+
+def event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    return render(request, 'landing/event.html', {'event': event})
+
+
+def kino(request):
+    movies = Movie.objects.all()
+    return render(request, 'landing/kino.html', {
+        'movies': movies,
+        'premieres_count': movies.filter(premiere=True).count(),
+        'days': _days(),
+    })
+def redirect_to_home(request, exception):
+    return redirect('/')

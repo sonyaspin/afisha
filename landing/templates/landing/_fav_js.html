@@ -1,0 +1,133 @@
+<style>
+.vb-fav-btn { position: absolute; top: 12px; right: 12px; z-index: 3; width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50% !important; background: rgba(255, 255, 255, 0.95); color: #64748b; cursor: pointer; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18); transition: transform 0.15s, color 0.15s; }
+.vb-fav-btn:hover { transform: scale(1.08); color: #e0394c; }
+.vb-fav-btn svg, .vb-fav-text svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.vb-fav-btn.is-on, .vb-fav-text.is-on { color: #e0394c; }
+.vb-fav-btn.is-on svg, .vb-fav-text.is-on svg { fill: currentColor; }
+.vb-fav-text { appearance: none; -webkit-appearance: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px 18px; background: #ffffff; border: 1px solid #e2e6ee; border-radius: 999px !important; color: #475569; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+.vb-fav-text:hover { border-color: #e0394c; color: #e0394c; }
+.vb-fav-text.is-on { background: #fff1f3; border-color: #f3b7c0; }
+/* закладка рядом с кнопкой «Билеты» */
+.vb-fav-act { display: inline-flex; align-items: center; gap: 8px; position: relative; z-index: 2; }
+.vb-fav-mark { position: relative; z-index: 3; width: 36px; height: 36px; flex: none; display: inline-flex; align-items: center; justify-content: center; padding: 0; border-radius: 10px !important; background: #ffffff; border: 1px solid #e2e6ee; color: #64748b; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.vb-fav-mark svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.vb-fav-mark:hover { border-color: #1FAE63; color: #1FAE63; }
+.vb-fav-mark.is-on { background: rgba(31, 174, 99, 0.12); border-color: rgba(31, 174, 99, 0.3); color: #1FAE63; }
+.vb-fav-mark.is-on svg { fill: currentColor; }
+.vb-fav-mark--poster { position: absolute; right: 10px; bottom: 10px; background: rgba(255, 255, 255, 0.94); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2); }
+.vb-ev1-btn.is-on, .vb-flm-btn.is-on { background: #e6f7ee !important; border-color: #1FAE63 !important; color: #0e7a3f !important; }
+</style>
+{{ fav_state|json_script:"vb-fav-state" }}
+<input type="hidden" id="vb-fav-csrf" value="{{ csrf_token }}" data-url="{% url 'fav_toggle' %}">
+<script>
+(function() {
+  if (window.vbFavSync) { window.vbFavSync(); return; }
+  var TYPES = ['tour', 'place', 'guide', 'event', 'movie'];
+  var MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12a2 2 0 0 1 2 2v18l-8-4-8 4V4a2 2 0 0 1 2-2z"/></svg>';
+  var STATE = { authed: false };
+  TYPES.forEach(function(k) { STATE[k] = []; });
+  try { STATE = JSON.parse(document.getElementById('vb-fav-state').textContent) || STATE; } catch (e) {}
+  var holder = document.getElementById('vb-fav-csrf');
+  function has(t, id) { return !!STATE[t] && STATE[t].indexOf(id) > -1; }
+  function setOn(t, id, on) {
+    var l = STATE[t] || (STATE[t] = []), i = l.indexOf(id);
+    if (on && i < 0) l.push(id);
+    if (!on && i > -1) l.splice(i, 1);
+  }
+  function sync() {
+    [].forEach.call(document.querySelectorAll('[data-fav-type]'), function(b) {
+      var on = has(b.dataset.favType, parseInt(b.dataset.favId, 10));
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.title = on ? 'Убрать из избранного' : 'В избранное';
+      var l = b.querySelector('[data-fav-label]');
+      if (l) l.textContent = on ? 'В избранном' : 'В избранное';
+    });
+  }
+  function askLogin() {
+    var opener = document.querySelector('[data-auth-open]');
+    if (opener) opener.click();
+    else window.location.href = '/?login=1&next=' + encodeURIComponent(window.location.pathname);
+  }
+  function announce(t, id, on) {
+    document.dispatchEvent(new CustomEvent('vb:fav-change', { detail: { type: t, id: id, on: on } }));
+  }
+  document.addEventListener('click', function(e) {
+    var b = e.target.closest('[data-fav-type]');
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if (!STATE.authed) { askLogin(); return; }          // избранное — только для вошедших
+    var t = b.dataset.favType, id = parseInt(b.dataset.favId, 10), on = !has(t, id);
+    setOn(t, id, on); sync(); announce(t, id, on);
+    var fd = new FormData();
+    fd.append('kind', t); fd.append('id', id);
+    fetch(holder.dataset.url, {
+      method: 'POST', body: fd, credentials: 'same-origin',
+      headers: { 'X-CSRFToken': holder.value, 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(function(r) {
+      if (r.status === 401) { STATE.authed = false; setOn(t, id, !on); sync(); askLogin(); return null; }
+      return r.json();
+    }).then(function(d) {
+      if (d && d.ok && d.on !== on) { setOn(t, id, d.on); sync(); }
+    }).catch(function() { window.location.reload(); });
+  });
+
+  // Закладки на карточках событий и фильмов (шаблоны страниц менять не нужно)
+  function makeMark(type, id, extra) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'vb-fav-mark' + (extra ? ' ' + extra : '');
+    b.setAttribute('data-fav-type', type);
+    b.setAttribute('data-fav-id', id);
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', 'В избранное');
+    b.title = 'В избранное';
+    b.innerHTML = MARK;
+    return b;
+  }
+  function linkId(card, re) {
+    var as = card.querySelectorAll('a[href]');
+    for (var i = 0; i < as.length; i++) {
+      var m = as[i].getAttribute('href').match(re);
+      if (m) return m[1];
+    }
+    return null;
+  }
+  function beside(btn, mark) {
+    var w = document.createElement('span');
+    w.className = 'vb-fav-act';
+    btn.parentNode.insertBefore(w, btn);
+    w.appendChild(btn);
+    w.appendChild(mark);
+  }
+  function enhance() {
+    [].forEach.call(document.querySelectorAll('.vb-ev9-event'), function(card) {
+      if (card.querySelector('[data-fav-type]')) return;
+      var id = linkId(card, /\/event\/(\d+)\//), btn = card.querySelector('.vb-ev9-event__btn');
+      if (id && btn) beside(btn, makeMark('event', id));
+    });
+    [].forEach.call(document.querySelectorAll('.vb-kn1-movie'), function(card) {
+      if (card.querySelector('[data-fav-type]')) return;
+      var id = linkId(card, /\/movie\/(\d+)\//), btn = card.querySelector('.vb-kn1-movie__btn');
+      if (id && btn) beside(btn, makeMark('movie', id));
+    });
+    [].forEach.call(document.querySelectorAll('.vb-cn3-movie'), function(card) {
+      if (card.querySelector('[data-fav-type]')) return;
+      var id = linkId(card, /\/movie\/(\d+)\//), poster = card.querySelector('.vb-cn3-movie__poster');
+      if (id && poster) poster.appendChild(makeMark('movie', id, 'vb-fav-mark--poster'));
+    });
+    var pm = location.pathname.match(/\/(event|movie)\/(\d+)\//);
+    if (pm) {
+      [].forEach.call(document.querySelectorAll('.vb-ev1-hero__actions button, .vb-flm-hero__actions button'), function(b) {
+        if (b.textContent.replace(/\s+/g, ' ').trim().indexOf('В избранное') !== 0) return;
+        b.setAttribute('data-fav-type', pm[1]);
+        b.setAttribute('data-fav-id', pm[2]);
+        var s = b.querySelector('span'); if (s) s.setAttribute('data-fav-label', '');
+      });
+    }
+  }
+  window.vbFavSync = sync;
+  enhance();
+  sync();
+})();
+</script>

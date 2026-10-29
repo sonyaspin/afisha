@@ -1,0 +1,48 @@
+
+from django.contrib import admin
+from django.utils.html import format_html
+ 
+from .models import Event, Movie, Actor, Session
+ 
+ 
+class PreviewMixin:
+    def preview(self, obj):
+        url = obj.image_url if obj.pk else ''
+        if not url:
+            return '—'
+        return format_html('<img src="{}" style="height:90px;border-radius:10px;object-fit:cover;">', url)
+    preview.short_description = 'Превью'
+ 
+ 
+@admin.register(Event)
+class EventAdmin(PreviewMixin, admin.ModelAdmin):
+    list_display = ('preview', 'title', 'category', 'date', 'time', 'place', 'is_favorite')
+    list_display_links = ('preview', 'title')
+    list_editable = ('is_favorite',)          # галочка «в избранном» прямо в списке
+    list_filter = ('is_favorite', 'category', 'date')
+    search_fields = ('title', 'place')
+    readonly_fields = ('preview',)
+ 
+ 
+class ActorInline(admin.TabularInline):
+    model = Actor
+    extra = 3                                  # три пустые строки для новых актёров
+    fields = ('name', 'role', 'order')
+ 
+ 
+class SessionInline(admin.TabularInline):
+    model = Session
+    extra = 4                                  # четыре пустые строки: добавляйте сколько нужно
+    fields = ('time', 'format', 'price')
+ 
+ 
+@admin.register(Movie)
+class MovieAdmin(PreviewMixin, admin.ModelAdmin):
+    list_display = ('preview', 'title', 'age', 'cinema', 'premiere', 'is_favorite')
+    list_display_links = ('preview', 'title')
+    list_editable = ('is_favorite',)
+    list_filter = ('is_favorite', 'premiere')
+    search_fields = ('title',)
+    readonly_fields = ('preview',)
+    exclude = ('times',)                       # старое текстовое поле скрыто
+    inlines = [SessionInline, ActorInline]

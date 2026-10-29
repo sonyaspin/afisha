@@ -1,0 +1,49 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% load ru_extras %}
+{% block title %}{{ tour.title }} — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-tr-title vb-tr-title--sm" aria-labelledby="vb-td-h1">
+ {% include "landing/_tourism_mountains.html" %}
+ <div class="vb-tr-title__inner">
+  <nav class="vb-tr-crumbs" aria-label="Навигация по сайту"><a href="{% url 'index' %}">Главная</a> <span aria-hidden="true">›</span> <a href="{% url 'tourism' %}#tab-{{ tour.kind }}">Туризм</a> <span aria-hidden="true">›</span> <span class="vb-tr-crumbs__current">{{ tour.get_kind_display }}</span></nav>
+  <h1 class="vb-tr-title__heading" id="vb-td-h1">{{ tour.title }}</h1>
+  <div class="vb-tr-herobadges"><span class="vb-tr-herobadge">{{ tour.badge }}</span>{% if tour.when_label %}<span class="vb-tr-herobadge">{{ tour.when_label }}</span>{% endif %}{% if tour.kind == 'hike' and tour.difficulty %}<span class="vb-tr-herobadge">{{ tour.difficulty_label }}</span>{% endif %}</div>
+ </div>
+</section>
+
+<section class="vb-td">
+ <div class="vb-tr__inner">
+  <div class="vb-td__grid">
+   <div class="vb-td__main">
+    <div class="vb-td-media">{% if tour.image_url %}<img src="{{ tour.image_url }}" alt="{{ tour.title }}">{% endif %}</div>
+    {% if tour.description %}<div class="vb-td-box"><h2 class="vb-td-box__title">Описание</h2><p class="vb-td-text">{{ tour.description }}</p></div>{% endif %}
+    {% if tour.program %}<div class="vb-td-box"><h2 class="vb-td-box__title">Маршрут и что включено</h2><p class="vb-td-text">{{ tour.program }}</p></div>{% endif %}
+    {% with places=tour.places.all %}{% if places %}<div class="vb-td-box"><h2 class="vb-td-box__title">Места маршрута</h2>
+     <div class="vb-td-placelist">{% for p in places %}<a class="vb-td-place" href="{% url 'place_detail' p.id %}">
+      <span class="vb-td-place__img">{% if p.image_url %}<img src="{{ p.image_url }}" alt="" loading="lazy">{% endif %}</span>
+      <span><span class="vb-td-place__name">{{ p.name }}</span>{% if p.location_line %}<div class="vb-td-place__loc">{{ p.location_line }}</div>{% endif %}</span>
+      <span class="vb-td-place__go">→</span></a>{% endfor %}</div></div>{% endif %}{% endwith %}
+   </div>
+   <aside class="vb-td-side">
+    <div class="vb-td-box">
+     {% if tour.when_label %}<div class="vb-td-when"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>{{ tour.when_label }}</div>{% endif %}
+     <div class="vb-td-price">{{ tour.price_label }}</div>
+     <ul class="vb-td-facts">{% for f in tour.facts %}<li>{{ f }}</li>{% endfor %}</ul>
+     {% if tour.booking_url %}<a class="vb-tr-btn" href="{{ tour.booking_url }}" target="_blank" rel="noopener">{{ tour.button_label }}</a>
+     {% elif tour.guide and tour.guide.contact_url %}<a class="vb-tr-btn" href="{{ tour.guide.contact_url }}" target="_blank" rel="noopener">{{ tour.button_label }}</a>
+     {% else %}<div class="vb-td-note">Контакты для бронирования скоро появятся.</div>{% endif %}
+     <button type="button" class="vb-fav-text" data-fav-type="tour" data-fav-id="{{ tour.id }}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 5 6.3 5c2 0 3.5 1.1 4.2 2.3.4.6.6.9 1.5.9s1.1-.3 1.5-.9C14.2 6.1 15.7 5 17.7 5c3.4 0 5.4 3.4 3.9 6.8C19.5 16.4 12 21 12 21z"/></svg><span data-fav-label>В избранное</span></button>
+     {% if tour.guide %}<a class="vb-td-person" href="{% url 'guide_detail' tour.guide.id %}">
+      <span class="vb-td-person__ava">{% if tour.guide.image_url %}<img src="{{ tour.guide.image_url }}" alt="">{% endif %}</span>
+      <span><span class="vb-td-person__name">{{ tour.guide.name }}</span><div class="vb-td-person__sub">{% if tour.guide.specialization %}{{ tour.guide.specialization }}{% else %}Гид{% endif %}</div></span></a>{% endif %}
+    </div>
+   </aside>
+  </div>
+  {% if related %}<h2 class="vb-td-sectionhead">Другие предложения</h2>
+  <ul class="vb-tr-grid">{% for t in related %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>{% endif %}
+ </div>
+</section>
+{% include "landing/_tourism_css.html" %}
+{% endblock %}
+{% block page_theme %}{% include "landing/_tourism_theme.html" %}{% endblock %}

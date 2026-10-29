@@ -1,0 +1,195 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% load ru_extras %}
+{% block title %}Избранное — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-z3r-title" id="vb-z3r-title" data-section-name="Заголовок" aria-labelledby="vb-z3r-title-heading" data-vibeblock-unique-section="yes"> <div class="vb-z3r-title__inner"> <nav class="vb-z3r-title__crumbs" aria-label="Навигация по сайту"> <a href="{% url 'index' %}">Главная</a> <span class="vb-z3r-title__sep" aria-hidden="true">›</span> <span class="vb-z3r-title__current">Избранное</span> </nav> <h1 class="vb-z3r-title__heading" id="vb-z3r-title-heading">Избранное</h1> <p class="vb-z3r-title__sub">Всё, что вы отметили закладкой или сердечком. Возвращайтесь сюда, чтобы не пропустить.</p> </div> </section>
+<style>
+.vb-z3r-title,.vb-z3r-title * { box-sizing: border-box; }
+.vb-z3r-title input,.vb-z3r-title textarea,.vb-z3r-title select { font: inherit; }
+.vb-z3r-title { background: linear-gradient(180deg, #eafaf1 0%, #ffffff 100%); border-bottom: 1px solid #eef0f3; font-family: var(--t-text-font), system-ui, sans-serif; }
+.vb-z3r-title__inner { max-width: 1280px; margin: 0 auto; padding: 36px 32px 40px; }
+.vb-z3r-title__crumbs { display: flex; align-items: center; gap: 8px; font-family: var(--t-text-font), system-ui, sans-serif; font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+.vb-z3r-title__crumbs a { color: #1FAE63; text-decoration: none; transition: color 0.15s; }
+.vb-z3r-title__crumbs a:hover { color: #0e7a3f; }
+.vb-z3r-title__sep { color: #cbd2dc; font-size: 14px; }
+.vb-z3r-title__current { color: #0f172a; font-weight: 500; }
+.vb-z3r-title__heading { font-family: var(--t-headline-font), sans-serif; font-size: 44px; font-weight: 700; letter-spacing: -0.025em; color: #0f172a; margin: 0 0 14px; line-height: 1.05; }
+.vb-z3r-title__sub { font-family: var(--t-text-font), system-ui, sans-serif; font-size: 17px; color: #475569; line-height: 1.55; margin: 0 0 20px; max-width: 760px; }
+.vb-z3r-title__meta { display: flex; flex-wrap: wrap; gap: 10px; }
+.vb-z3r-title__chip { display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e6ee; font-family: var(--t-text-font), system-ui, sans-serif; font-size: 13px; color: #475569; }
+.vb-z3r-title__chip strong { font-family: var(--t-headline-font), sans-serif; font-weight: 700; color: #0f172a; font-size: 15px; margin-right: 2px; }
+@media (max-width: 960px) {
+  .vb-z3r-title__inner { padding: 28px 18px 32px; }
+  .vb-z3r-title__heading { font-size: 32px; }
+  .vb-z3r-title__sub { font-size: 15px; }
+}
+@media (max-width: 480px) {
+  .vb-z3r-title__heading { font-size: 26px; }
+}
+</style>
+<section class="vb-fav-page" id="vb-fav-page" data-section-name="Избранное" aria-label="Избранное" data-vibeblock-unique-section="yes"> <div class="vb-fav-page__inner"> <div id="vb-fav-body">{% if has_items %}{% include "landing/_fav_items.html" %}{% endif %}</div> <div class="vb-fav-none" id="vb-fav-none"{% if has_items %} hidden{% endif %}>{% if user.is_authenticated %}Пока ничего не сохранено. Нажимайте на закладку или сердечко на карточках — и всё появится здесь.{% else %}Избранное доступно после входа. <a href="#" data-auth-open="login">Войти или зарегистрироваться</a>{% endif %}</div> </div> </section>
+<style>
+.vb-fav-page,.vb-fav-page * { box-sizing: border-box; }
+.vb-fav-page input,.vb-fav-page textarea,.vb-fav-page select { font: inherit; }
+.vb-fav-page { background: #f8fafc; padding: 36px 0 56px; font-family: var(--t-text-font), system-ui, sans-serif; }
+.vb-fav-page__inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+.vb-fav-block__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; gap: 16px; flex-wrap: wrap; }
+.vb-fav-block__head--second { margin-top: 40px; }
+.vb-fav-block__title { font-family: var(--t-headline-font), system-ui, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.01em; color: #0f172a; margin: 0; }
+.vb-fav-block__clear { font-family: var(--t-text-font), system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #e0394c; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: background 0.15s; }
+.vb-fav-block__clear:hover { background: rgba(224, 57, 76, 0.08); }
+
+/* События */
+.vb-fav-events { list-style: none; margin: 0 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.vb-fav-event { background: #ffffff; border: 1px solid #eef0f3; border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr; transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s; }
+.vb-fav-event:hover { border-color: #1FAE63; box-shadow: 0 10px 28px rgba(31, 174, 99, 0.12); transform: translateY(-2px); }
+.vb-fav-event__media { position: relative; display: block; overflow: hidden; background: #1e293b; text-decoration: none; min-height: 180px; }
+.vb-fav-event__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+.vb-fav-event:hover .vb-fav-event__media img { transform: scale(1.04); }
+.vb-fav-event__cat { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 700; color: #ffffff; background: rgba(15, 23, 42, 0.78); padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.08em; backdrop-filter: blur(6px); }
+.vb-fav-event__time { position: absolute; top: 12px; right: 12px; font-size: 12px; font-weight: 600; color: #ffffff; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(6px); padding: 5px 9px; border-radius: 7px; }
+.vb-fav-event__body { padding: 18px 20px 16px; display: flex; flex-direction: column; min-width: 0; }
+.vb-fav-event__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; min-height: 20px; }
+.vb-fav-event__tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; letter-spacing: 0.04em; }
+.vb-fav-event__tag--pushkin { color: #b85c00; background: #fff4e5; }
+.vb-fav-event__title { font-family: var(--t-headline-font), sans-serif; font-size: 19px; font-weight: 600; letter-spacing: -0.015em; color: #0f172a; margin: 0 0 12px; line-height: 1.25; }
+.vb-fav-event__title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+.vb-fav-event__title a:hover { color: #1FAE63; }
+.vb-fav-event__venue { display: flex; gap: 10px; padding: 10px 0; border-top: 1px dashed #e8ebf0; margin-bottom: 12px; }
+.vb-fav-event__icon { width: 16px; height: 16px; margin-top: 2px; opacity: 0.6; flex-shrink: 0; }
+.vb-fav-event__place { font-size: 13px; font-weight: 600; color: #0f172a; }
+.vb-fav-event__addr { font-size: 12px; color: #6b7280; margin-top: 2px; }
+.vb-fav-event__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.vb-fav-event__price { font-size: 13px; color: #475569; }
+.vb-fav-event__price strong { font-family: var(--t-headline-font), sans-serif; color: #0f172a; font-weight: 700; font-size: 15px; }
+.vb-fav-event__actions { display: inline-flex; align-items: center; gap: 6px; }
+.vb-fav-event__btn { background: #1FAE63; color: #ffffff !important; border-radius: 10px; padding: 9px 16px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; font-family: var(--t-text-font), system-ui, sans-serif; transition: background 0.15s; }
+.vb-fav-event__btn:hover { background: #0e7a3f; }
+.vb-fav-event__btn .t-btnflex__text { color: #ffffff; }
+
+/* Кнопка-закладка — как у верхних карточек: яркая иконка, прозрачный фон */
+.vb-fav-event__remove,
+.vb-fav-movie__bookmark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(31, 174, 99, 0.12);
+  border: 1px solid rgba(31, 174, 99, 0.25);
+  color: #1FAE63;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.vb-fav-event__remove:hover,
+.vb-fav-movie__bookmark:hover {
+  background: rgba(224, 57, 76, 0.12);
+  border-color: rgba(224, 57, 76, 0.3);
+  color: #e0394c;
+}
+
+/* Фильмы */
+.vb-fav-movies { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.vb-fav-movie { background: #ffffff; border: 1px solid #eef0f3; border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr; transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s; }
+.vb-fav-movie:hover { border-color: #1FAE63; box-shadow: 0 10px 28px rgba(31, 174, 99, 0.12); transform: translateY(-2px); }
+.vb-fav-movie__poster { position: relative; display: block; overflow: hidden; background: #1e293b; text-decoration: none; min-height: 260px; }
+.vb-fav-movie__poster img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+.vb-fav-movie:hover .vb-fav-movie__poster img { transform: scale(1.04); }
+.vb-fav-movie__age { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 700; color: #ffffff; background: rgba(15, 23, 42, 0.78); padding: 5px 10px; border-radius: 999px; backdrop-filter: blur(6px); letter-spacing: 0.04em; }
+.vb-fav-movie__age--green { background: rgba(31, 174, 99, 0.92); }
+.vb-fav-movie__body { padding: 18px 20px 16px; display: flex; flex-direction: column; min-width: 0; }
+.vb-fav-movie__title { font-family: var(--t-headline-font), sans-serif; font-size: 19px; font-weight: 600; letter-spacing: -0.015em; color: #0f172a; margin: 0 0 10px; line-height: 1.2; }
+.vb-fav-movie__title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+.vb-fav-movie__title a:hover { color: #1FAE63; }
+.vb-fav-movie__meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.vb-fav-movie__row { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #475569; }
+.vb-fav-movie__date { color: #1FAE63; font-weight: 600; }
+.vb-fav-movie__icon { width: 14px; height: 14px; opacity: 0.6; }
+.vb-fav-movie__cinema { font-weight: 500; color: #0f172a; }
+.vb-fav-movie__times { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.vb-fav-movie__times li { font-size: 12px; font-weight: 600; background: #e6f7ee; color: #0e7a3f; padding: 4px 9px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.vb-fav-movie__times li:hover { background: #1FAE63; color: #ffffff; }
+.vb-fav-movie__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px dashed #e8ebf0; }
+.vb-fav-movie__price { font-size: 13px; color: #475569; }
+.vb-fav-movie__price strong { font-family: var(--t-headline-font), sans-serif; color: #0f172a; font-weight: 700; font-size: 15px; }
+.vb-fav-movie__actions { display: inline-flex; align-items: center; gap: 6px; }
+.vb-fav-movie__btn { background: #1FAE63; color: #ffffff !important; border-radius: 10px; padding: 9px 18px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; font-family: var(--t-text-font), system-ui, sans-serif; transition: background 0.15s; }
+.vb-fav-movie__btn:hover { background: #0e7a3f; }
+.vb-fav-movie__btn .t-btnflex__text { color: #ffffff; }
+
+.vb-fav-empty { margin-top: 36px; padding: 24px 28px; background: #ffffff; border: 1px dashed #bfe3cd; border-radius: 16px; text-align: center; }
+.vb-fav-empty__text { font-size: 14px; color: #475569; margin: 0; }
+.vb-fav-empty__text a { color: #1FAE63; font-weight: 600; text-decoration: none; }
+.vb-fav-empty__text a:hover { color: #0e7a3f; }
+
+@media (max-width: 1100px) {
+  .vb-fav-events, .vb-fav-movies { grid-template-columns: 1fr; }
+}
+@media (max-width: 960px) {
+  .vb-fav-page__inner { padding: 0 18px; }
+  .vb-fav-block__title { font-size: 24px; }
+}
+@media (max-width: 640px) {
+  .vb-fav-event, .vb-fav-movie { grid-template-columns: 130px 1fr; }
+  .vb-fav-event__title, .vb-fav-movie__title { font-size: 17px; }
+  .vb-fav-event__body, .vb-fav-movie__body { padding: 14px; }
+}
+/* вся карточка кликабельна */
+.vb-fav-event__tag--free { background: #e6f7ee; color: #0e7a3f; }
+.vb-fav-event, .vb-fav-movie { position: relative; cursor: pointer; }
+.vb-fav-event__title a::after, .vb-fav-movie__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.vb-fav-event__btn, .vb-fav-movie__btn { position: relative; z-index: 2; }
+.t1370 .vb-fav-event__title, .t1370 .vb-fav-movie__title { font-weight: 600 !important; }
+/* мобильная версия: карточки по одной в ряд, вертикальные */
+@media (max-width: 640px) {
+  .vb-fav-events, .vb-fav-movies { grid-template-columns: 1fr; }
+  .vb-fav-event, .vb-fav-movie { grid-template-columns: 1fr; }
+  .vb-fav-event__media, .vb-fav-movie__poster { width: 100%; height: 220px; min-height: 0; }
+  .vb-fav-event__media img, .vb-fav-movie__poster img { width: 100%; height: 100%; object-fit: cover; }
+}
+/* блок избранного грузится с сервера по сохранённым id */
+.vb-fav-sec { margin-bottom: 40px; }
+.vb-fav-none { padding: 36px 16px; text-align: center; color: #6b7280; font-size: 15px; background: #ffffff; border: 1px dashed #bfe3cd; border-radius: 16px; }
+.vb-fav-none[hidden] { display: none; }
+.vb-fav-t__h { font-size: 18px; font-weight: 700; margin: 6px 0 12px; color: #334155; }
+.vb-fav-t__group { margin-bottom: 24px; }
+.vb-fav-event__actions, .vb-fav-movie__actions { display: inline-flex; align-items: center; gap: 8px; }
+.vb-fav-page .vb-tr-card:hover { border-color: #1FAE63; box-shadow: 0 10px 28px rgba(31, 174, 99, 0.14); }
+.vb-fav-page .vb-tr-card:hover .vb-tr-card__title a { color: #0e7a3f; }
+.vb-fav-page .vb-tr-btn { background: #1FAE63; }
+.vb-fav-page .vb-tr-btn:hover { background: #0e7a3f; }
+.vb-fav-page .vb-tr-ptag, .vb-fav-page .vb-tr-when { background: #e6f7ee; color: #0e7a3f; }
+.vb-fav-page .vb-tr-by a, .vb-fav-page .vb-tr-mini__price, .vb-fav-page .vb-tr-none a { color: #0e7a3f; }
+.vb-fav-page .vb-tr-badge { color: #0e7a3f; }
+</style>
+{% include "landing/_tourism_css.html" %}
+<script>
+(function() {
+  var page = document.getElementById('vb-fav-page');
+  if (!page) return;
+  var body = document.getElementById('vb-fav-body');
+  var none = document.getElementById('vb-fav-none');
+  function refresh() {
+    [].forEach.call(body.querySelectorAll('.vb-fav-t__group'), function(g) { if (!g.querySelector('.vb-tr-card')) g.remove(); });
+    [].forEach.call(body.querySelectorAll('.vb-fav-sec'), function(s) {
+      if (!s.querySelector('.vb-fav-event, .vb-fav-movie, .vb-tr-card')) s.remove();
+    });
+    none.hidden = !!body.querySelector('.vb-fav-sec');
+  }
+  // убрали закладку/сердечко — карточка исчезает из списка
+  document.addEventListener('vb:fav-change', function(e) {
+    if (e.detail.on) return;
+    [].forEach.call(body.querySelectorAll('[data-fav-type="' + e.detail.type + '"]'), function(b) {
+      if (parseInt(b.dataset.favId, 10) === e.detail.id) {
+        var c = b.closest('.vb-fav-event, .vb-fav-movie, .vb-tr-card'); if (c) c.remove();
+      }
+    });
+    refresh();
+  });
+})();
+</script>
+{% endblock %}

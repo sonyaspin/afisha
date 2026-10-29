@@ -1,0 +1,35 @@
+{% load static %}{% if events %}<section class="vb-fav-sec"><header class="vb-fav-block__head"><h2 class="vb-fav-block__title">События</h2></header>
+<ul class="vb-fav-events">{% for event in events %}<li class="vb-fav-event">
+ <a class="vb-fav-event__media" href="{% url 'event' event.id %}" aria-label="{{ event.title }}">{% if event.image_url %}<img src="{{ event.image_url }}" loading="lazy" alt="{{ event.title }}">{% endif %}
+  <span class="vb-fav-event__cat">{{ event.category }}</span>
+  <span class="vb-fav-event__time">{{ event.date|date:"j E" }} {{ event.time|time:"H:i" }}</span></a>
+ <div class="vb-fav-event__body">
+  {% if event.tag %}<div class="vb-fav-event__tags"><span class="vb-fav-event__tag {% if event.tag == 'Бесплатно' %}vb-fav-event__tag--free{% else %}vb-fav-event__tag--pushkin{% endif %}">{{ event.tag }}</span></div>{% endif %}
+  <h3 class="vb-fav-event__title"><a href="{% url 'event' event.id %}">{{ event.title }}</a></h3>
+  <div class="vb-fav-event__venue"><img src="{% static 'landing/img/icons/marker.svg' %}" alt="" aria-hidden="true" class="vb-fav-event__icon"><div><div class="vb-fav-event__place">{{ event.place }}</div><div class="vb-fav-event__addr">{{ event.address }}</div></div></div>
+  <div class="vb-fav-event__foot"><span class="vb-fav-event__price"><strong>{{ event.price }}</strong></span>
+   <div class="vb-fav-event__actions"><a class="t-btnflex t-btnflex_md vb-fav-event__btn" href="{% url 'event' event.id %}"><span class="t-btnflex__text">Билеты</span></a>
+   <button type="button" class="vb-fav-mark is-on" data-fav-type="event" data-fav-id="{{ event.id }}" aria-pressed="true" title="Убрать из избранного" aria-label="Убрать из избранного"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12a2 2 0 0 1 2 2v18l-8-4-8 4V4a2 2 0 0 1 2-2z"/></svg></button></div></div>
+ </div>
+</li>{% endfor %}</ul></section>{% endif %}
+{% if movies %}<section class="vb-fav-sec"><header class="vb-fav-block__head"><h2 class="vb-fav-block__title">Фильмы</h2></header>
+<ul class="vb-fav-movies">{% for movie in movies %}<li class="vb-fav-movie">
+ <a class="vb-fav-movie__poster" href="{% url 'movie' movie.id %}" aria-label="{{ movie.title }}">{% if movie.image_url %}<img src="{{ movie.image_url }}" alt="{{ movie.title }}" loading="lazy">{% endif %}
+  <span class="vb-fav-movie__age">{{ movie.age }}</span></a>
+ <div class="vb-fav-movie__body">
+  <h3 class="vb-fav-movie__title"><a href="{% url 'movie' movie.id %}">{{ movie.title }}</a></h3>
+  <div class="vb-fav-movie__meta">
+   <div class="vb-fav-movie__row"><span class="vb-fav-movie__date">Сегодня, {% now "j E" %}</span></div>
+   <div class="vb-fav-movie__row"><img src="{% static 'landing/img/icons/marker.svg' %}" alt="" aria-hidden="true" class="vb-fav-movie__icon"><span class="vb-fav-movie__cinema">{{ movie.cinema }}</span></div>
+   <ul class="vb-fav-movie__times">{% for t in movie.times_list %}<li>{{ t }}</li>{% endfor %}</ul>
+  </div>
+  <div class="vb-fav-movie__foot"><span class="vb-fav-movie__price"><strong>{{ movie.price }}</strong></span>
+   <div class="vb-fav-movie__actions"><a class="t-btnflex t-btnflex_md vb-fav-movie__btn" href="{% url 'movie' movie.id %}"><span class="t-btnflex__text">Билеты</span></a>
+   <button type="button" class="vb-fav-mark is-on" data-fav-type="movie" data-fav-id="{{ movie.id }}" aria-pressed="true" title="Убрать из избранного" aria-label="Убрать из избранного"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12a2 2 0 0 1 2 2v18l-8-4-8 4V4a2 2 0 0 1 2-2z"/></svg></button></div></div>
+ </div>
+</li>{% endfor %}</ul></section>{% endif %}
+{% if tours or places or guides %}<section class="vb-fav-sec"><header class="vb-fav-block__head"><h2 class="vb-fav-block__title">Туризм</h2></header>
+{% if tours %}<div class="vb-fav-t__group"><h3 class="vb-fav-t__h">Экскурсии, походы и туры</h3><ul class="vb-tr-grid">{% for t in tours %}{% include "landing/_tour_card.html" %}{% endfor %}</ul></div>{% endif %}
+{% if places %}<div class="vb-fav-t__group"><h3 class="vb-fav-t__h">Места</h3><ul class="vb-tr-grid">{% for p in places %}{% include "landing/_place_card.html" %}{% endfor %}</ul></div>{% endif %}
+{% if guides %}<div class="vb-fav-t__group"><h3 class="vb-fav-t__h">Гиды</h3><ul class="vb-tr-grid">{% for g in guides %}{% include "landing/_guide_card.html" %}{% endfor %}</ul></div>{% endif %}
+</section>{% endif %}

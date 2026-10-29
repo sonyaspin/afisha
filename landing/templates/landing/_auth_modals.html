@@ -1,0 +1,497 @@
+{% load static %}
+<!-- Модалка: вход --> <div class="vb-login" id="vb-login" data-cabinet-url="{% url 'cabinet_tickets' %}" data-login-url="{% url 'auth_login' %}" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vb-login-title"> <div class="vb-login__overlay" data-auth-close></div> <div class="vb-login__window" role="document"> <button class="vb-login__close" type="button" aria-label="Закрыть" data-auth-close> <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg> </button> <div class="vb-login__head"> <div class="vb-login__logo" aria-hidden="true"> <div class="vb-login__logo-img" style="background-image: url('{% static 'landing/img/logo.png' %}');"></div> </div> <h2 class="vb-login__title" id="vb-login-title">Вход в Нальчик.Афиша</h2> <p class="vb-login__sub">Войдите, чтобы сохранять события в избранное и покупать билеты быстрее</p> </div> <form class="vb-login__form" id="vb-login-form" method="post" novalidate>{% csrf_token %}<input type="hidden" name="next" value=""> <label class="vb-login__field"> <span class="vb-login__label">Email или телефон</span> <input class="vb-login__input" type="text" name="login" required placeholder="you@example.com" autocomplete="username"> </label> <label class="vb-login__field"> <span class="vb-login__label">Пароль</span> <span class="vb-login__pass"> <input class="vb-login__input" type="password" name="password" required placeholder="••••••••" autocomplete="current-password"> <button class="vb-login__eye" type="button" aria-label="Показать пароль"> <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12 C5 6 9 4 12 4 C15 4 19 6 22 12 C19 18 15 20 12 20 C9 20 5 18 2 12 Z"></path><circle cx="12" cy="12" r="3"></circle></svg> </button> </span> </label> <div class="vb-login__row"> <label class="vb-login__check"> <input type="checkbox" name="remember" checked> <span>Запомнить меня</span> </label> <a class="vb-login__link" href="#">Забыли пароль?</a> </div> <p class="vb-auth-error" role="alert" hidden></p> <button class="vb-login__submit" type="submit">Войти</button> <p class="vb-login__reg">
+        Нет аккаунта? <a href="#" data-open-reg>Зарегистрироваться</a> </p> </form> </div> </div> 
+<style>
+.vb-login,
+.vb-login * { box-sizing: border-box; }
+.vb-login input,
+.vb-login textarea,
+.vb-login select { font: inherit; }
+
+.vb-login {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+}
+.vb-login.is-open { display: block; }
+
+.vb-login__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  animation: vbLoginFade 0.2s ease;
+}
+@keyframes vbLoginFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.vb-login__window {
+  position: relative;
+  max-width: 440px;
+  width: calc(100% - 32px);
+  margin: 6vh auto;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 32px 28px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.25);
+  animation: vbLoginPop 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes vbLoginPop {
+  from { transform: translateY(20px) scale(0.96); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.vb-login__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 0;
+  background: #f3f5f8;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.vb-login__close:hover { background: #e9ecf2; color: #0f172a; }
+
+.vb-login__head { text-align: center; margin-bottom: 22px; }
+.vb-login__logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vb-login__logo-img {
+  width: 64px;
+  height: 64px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.vb-login__title {
+  font-family: var(--t-headline-font), sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+.vb-login__sub {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+  margin: 0;
+}
+
+.vb-login__form { display: flex; flex-direction: column; gap: 14px; }
+.vb-login__field { display: flex; flex-direction: column; gap: 6px; }
+.vb-login__label { font-size: 13px; font-weight: 600; color: #0f172a; }
+.vb-login__input {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 15px;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #e2e6ee;
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.vb-login__input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+.vb-login__input::placeholder { color: #8a93a3; }
+
+.vb-login__pass { position: relative; display: block; }
+.vb-login__pass .vb-login__input { padding-right: 44px; }
+.vb-login__eye {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: #8a93a3;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+.vb-login__eye:hover { color: #4a90e2; background: rgba(74, 144, 226, 0.08); }
+
+.vb-login__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: -2px;
+}
+.vb-login__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  cursor: pointer;
+}
+.vb-login__check input { width: 15px; height: 15px; accent-color: #4a90e2; }
+.vb-login__link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2a5db0;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.vb-login__link:hover { color: #4a90e2; }
+
+.vb-login__submit {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #4a90e2;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  margin-top: 4px;
+}
+.vb-login__submit:hover { background: #2a5db0; transform: translateY(-1px); }
+
+.vb-login__reg {
+  text-align: center;
+  font-size: 14px;
+  color: #475569;
+  margin: 8px 0 0;
+}
+.vb-login__reg a {
+  font-weight: 600;
+  color: #4a90e2;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.vb-login__reg a:hover { color: #2a5db0; }
+
+@media (max-width: 480px) {
+  .vb-login__window { padding: 26px 20px 22px; margin: 4vh auto; }
+  .vb-login__title { font-size: 20px; }
+}
+
+.vb-auth-error { margin: 0 0 10px; padding: 10px 14px; border-radius: 12px; background: rgba(224, 57, 76, 0.08); color: #c0283a; font-size: 14px; line-height: 1.4; }
+.vb-auth-error[hidden] { display: none; }
+button.vb-h7k-header__nav-link { background: none; border: 0; margin: 0; font-family: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
+</style>
+<!-- Модалка: регистрация --> <div class="vb-reg" id="vb-reg" data-register-url="{% url 'auth_register' %}" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vb-reg-title"> <div class="vb-reg__overlay" data-auth-close></div> <div class="vb-reg__window" role="document"> <button class="vb-reg__close" type="button" aria-label="Закрыть" data-auth-close> <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg> </button> <div class="vb-reg__head"> <div class="vb-reg__logo" aria-hidden="true"> <div class="vb-reg__logo-img" style="background-image: url('{% static 'landing/img/logo.png' %}');"></div> </div> <h2 class="vb-reg__title" id="vb-reg-title">Регистрация в Нальчик.Афиша</h2> <p class="vb-reg__sub">Создайте аккаунт, чтобы сохранять события и покупать билеты быстрее</p> </div> <form class="vb-reg__form" id="vb-reg-form" method="post" novalidate>{% csrf_token %}<input type="hidden" name="next" value=""> <label class="vb-reg__field"> <span class="vb-reg__label">Ваше имя</span> <input class="vb-reg__input" type="text" name="name" required placeholder="Как к вам обращаться" autocomplete="name"> </label> <label class="vb-reg__field"> <span class="vb-reg__label">Email</span> <input class="vb-reg__input" type="email" name="email" required placeholder="you@example.com" autocomplete="email"> </label> <label class="vb-reg__field"> <span class="vb-reg__label">Телефон <span class="vb-reg__opt">(необязательно)</span></span> <input class="vb-reg__input" type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel"> </label> <label class="vb-reg__field"> <span class="vb-reg__label">Пароль</span> <span class="vb-reg__pass"> <input class="vb-reg__input" type="password" name="password" required placeholder="Минимум 8 символов" autocomplete="new-password"> <button class="vb-reg__eye" type="button" aria-label="Показать пароль"> <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12 C5 6 9 4 12 4 C15 4 19 6 22 12 C19 18 15 20 12 20 C9 20 5 18 2 12 Z"></path><circle cx="12" cy="12" r="3"></circle></svg> </button> </span> </label> <label class="vb-reg__field"> <span class="vb-reg__label">Повторите пароль</span> <span class="vb-reg__pass"> <input class="vb-reg__input" type="password" name="password2" required placeholder="Ещё раз" autocomplete="new-password"> <button class="vb-reg__eye" type="button" aria-label="Показать пароль"> <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12 C5 6 9 4 12 4 C15 4 19 6 22 12 C19 18 15 20 12 20 C9 20 5 18 2 12 Z"></path><circle cx="12" cy="12" r="3"></circle></svg> </button> </span> </label> <label class="vb-reg__check"> <input type="checkbox" name="agree" required> <span>Я согласен с <a href="#">правилами</a> и обработкой персональных данных</span> </label> <p class="vb-auth-error" role="alert" hidden></p> <button class="vb-reg__submit" type="submit">Зарегистрироваться</button> <p class="vb-reg__login">
+        Уже есть аккаунт? <a href="#" data-open-login>Войти</a> </p> </form> </div> </div> 
+<style>
+.vb-reg,
+.vb-reg * { box-sizing: border-box; }
+.vb-reg input,
+.vb-reg textarea,
+.vb-reg select { font: inherit; }
+
+.vb-reg {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+}
+.vb-reg.is-open { display: block; }
+
+.vb-reg__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  animation: vbRegFade 0.2s ease;
+}
+@keyframes vbRegFade { from { opacity: 0; } to { opacity: 1; } }
+
+.vb-reg__window {
+  position: relative;
+  max-width: 460px;
+  width: calc(100% - 32px);
+  margin: 5vh auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 32px 28px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.25);
+  animation: vbRegPop 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes vbRegPop {
+  from { transform: translateY(20px) scale(0.96); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.vb-reg__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 0;
+  background: #f3f5f8;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.vb-reg__close:hover { background: #e9ecf2; color: #0f172a; }
+
+.vb-reg__head { text-align: center; margin-bottom: 22px; }
+.vb-reg__logo { width: 64px; height: 64px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+.vb-reg__logo-img {
+  width: 64px;
+  height: 64px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.vb-reg__title {
+  font-family: var(--t-headline-font), sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+.vb-reg__sub {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+  margin: 0;
+}
+
+.vb-reg__form { display: flex; flex-direction: column; gap: 14px; }
+.vb-reg__field { display: flex; flex-direction: column; gap: 6px; }
+.vb-reg__label { font-size: 13px; font-weight: 600; color: #0f172a; }
+.vb-reg__opt { color: #8a93a3; font-weight: 400; font-size: 12px; }
+.vb-reg__input {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 15px;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #e2e6ee;
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.vb-reg__input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+.vb-reg__input::placeholder { color: #8a93a3; }
+
+.vb-reg__pass { position: relative; display: block; }
+.vb-reg__pass .vb-reg__input { padding-right: 44px; }
+.vb-reg__eye {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: #8a93a3;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+.vb-reg__eye:hover { color: #4a90e2; background: rgba(74, 144, 226, 0.08); }
+
+.vb-reg__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.vb-reg__check input { margin-top: 3px; width: 15px; height: 15px; accent-color: #4a90e2; flex-shrink: 0; }
+.vb-reg__check a { color: #2a5db0; text-decoration: none; font-weight: 600; }
+.vb-reg__check a:hover { color: #4a90e2; }
+
+.vb-reg__submit {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #4a90e2;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  margin-top: 4px;
+}
+.vb-reg__submit:hover { background: #2a5db0; transform: translateY(-1px); }
+
+.vb-reg__login {
+  text-align: center;
+  font-size: 14px;
+  color: #475569;
+  margin: 8px 0 0;
+}
+.vb-reg__login a {
+  font-weight: 600;
+  color: #4a90e2;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.vb-reg__login a:hover { color: #2a5db0; }
+
+@media (max-width: 480px) {
+  .vb-reg__window { padding: 26px 20px 22px; margin: 4vh auto; }
+  .vb-reg__title { font-size: 20px; }
+}
+</style>
+<script>
+(function() {
+  var login = document.getElementById('vb-login');
+  var reg = document.getElementById('vb-reg');
+  if (!login || !reg) return;
+  var cabinetUrl = login.getAttribute('data-cabinet-url') || '/';
+
+  function setOpen(modal, on) {
+    modal.classList.toggle('is-open', on);
+    modal.setAttribute('aria-hidden', on ? 'false' : 'true');
+  }
+  function show(modal) {
+    setOpen(login, modal === login);
+    setOpen(reg, modal === reg);
+    document.body.style.overflow = 'hidden';
+    var first = modal.querySelector('input');
+    if (first) setTimeout(function() { first.focus(); }, 50);
+  }
+  function closeAll() {
+    setOpen(login, false);
+    setOpen(reg, false);
+    document.body.style.overflow = '';
+  }
+
+  // Кнопки открытия: [data-auth-open] и (запасной вариант) ссылки шапки «Войти» / «Личный кабинет»
+  var openers = Array.prototype.slice.call(document.querySelectorAll('[data-auth-open]'));
+  document.querySelectorAll('.vb-h7k-header__nav-link').forEach(function(link) {
+    var txt = (link.textContent || '').trim().toLowerCase();
+    if ((txt.indexOf('войти') !== -1 || txt.indexOf('личный кабинет') !== -1) && openers.indexOf(link) === -1) openers.push(link);
+  });
+  openers.forEach(function(el) {
+    el.addEventListener('click', function(e) { e.preventDefault(); show(login); });
+  });
+
+  document.querySelectorAll('#vb-login [data-auth-close], #vb-reg [data-auth-close]').forEach(function(el) {
+    el.addEventListener('click', closeAll);
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  // Переключение между модалками
+  document.querySelectorAll('[data-open-reg]').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.preventDefault(); show(reg); });
+  });
+  document.querySelectorAll('[data-open-login]').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.preventDefault(); show(login); });
+  });
+  // Ссылки-заглушки внутри модалок
+  document.querySelectorAll('#vb-login .vb-login__link, #vb-reg .vb-reg__check a').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.preventDefault(); });
+  });
+
+  // Показать / скрыть пароль
+  document.querySelectorAll('#vb-login .vb-login__eye, #vb-reg .vb-reg__eye').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var input = btn.parentElement.querySelector('input');
+      if (input) input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  });
+
+  function fail(form, text) {
+    var box = form.querySelector('.vb-auth-error');
+    box.textContent = text; box.hidden = false;
+  }
+  function csrfFrom(form) {
+    var t = form.querySelector('input[name=csrfmiddlewaretoken]');
+    return t ? t.value : '';
+  }
+  // Настоящая отправка на сервер: регистрация и вход через Django
+  function bind(id, urlAttr, holder, check) {
+    var form = document.getElementById(id);
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      form.querySelector('.vb-auth-error').hidden = true;
+      var msg = check(form);
+      if (msg) { fail(form, msg); return; }
+      var btn = form.querySelector('[type=submit]');
+      btn.disabled = true;
+      fetch(holder.getAttribute(urlAttr), {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: 'same-origin',
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfFrom(form) }
+      }).then(function(r) {
+        return r.json().then(function(d) { return { ok: r.ok, d: d }; });
+      }).then(function(res) {
+        if (res.d && res.d.ok) { window.location.href = res.d.redirect || cabinetUrl; }
+        else { fail(form, (res.d && res.d.message) || 'Не получилось. Проверьте данные и попробуйте ещё раз.'); }
+      }).catch(function() {
+        fail(form, 'Не удалось связаться с сервером. Обновите страницу и попробуйте ещё раз.');
+      }).then(function() { btn.disabled = false; });
+    });
+    return form;
+  }
+  var loginForm = bind('vb-login-form', 'data-login-url', login, function(f) {
+    if (!f.login.value.trim() || !f.password.value) return 'Введите email или телефон и пароль.';
+    return '';
+  });
+  var regForm = bind('vb-reg-form', 'data-register-url', reg, function(f) {
+    if (!f.name.value.trim() || !f.email.value.trim() || !f.password.value) return 'Заполните имя, email и пароль.';
+    if (f.password.value !== f.password2.value) return 'Пароли не совпадают.';
+    if (!f.agree.checked) return 'Нужно согласие с правилами.';
+    return '';
+  });
+
+  // Адрес вида /?login=1&next=/cabinet/tickets/ — окно входа открывается само
+  var qs = new URLSearchParams(window.location.search);
+  var nextUrl = qs.get('next') || '';
+  if (nextUrl.charAt(0) === '/' && nextUrl.charAt(1) !== '/') {
+    loginForm.next.value = nextUrl;
+    regForm.next.value = nextUrl;
+  }
+  // после входа человек возвращается на страницу, где был (регистрация ведёт в кабинет)
+  if (!loginForm.next.value) loginForm.next.value = window.location.pathname;
+  if (qs.get('login') === '1') show(login);
+})();
+</script>

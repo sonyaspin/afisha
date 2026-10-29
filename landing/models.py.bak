@@ -1,0 +1,280 @@
+
+from django.db import models
+
+
+class SiteSettings(models.Model):
+    company_name = models.CharField('Название', max_length=100, default='IT_COMPANY')
+    tagline = models.CharField('Подзаголовок', max_length=200, default='разработка · инфраструктура')
+    hero_line1 = models.CharField('Заголовок 1', max_length=100, default='Строим цифровые')
+    hero_line2 = models.CharField('Заголовок 2', max_length=100, default='продукты для')
+    hero_line3 = models.CharField('Заголовок 3', max_length=100, default='бизнеса')
+    hero_text = models.TextField(
+        'Текст справа',
+        default='Небольшая команда. Фокус на качестве, а не на количестве проектов. Работаем с компаниями, которым важна надёжность.'
+    )
+    footer_text = models.CharField('Низ', max_length=200, default='© 2026 IT_COMPANY')
+
+    class Meta:
+        verbose_name = 'Шапка сайта'
+        verbose_name_plural = 'Шапка сайта'
+
+    def __str__(self):
+        return 'Настройки'
+
+
+class Stat(models.Model):
+    value = models.CharField('Значение', max_length=50)
+    label = models.CharField('Подпись', max_length=200)
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Цифра'
+        verbose_name_plural = 'Цифры'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.value
+
+
+class Service(models.Model):
+    number = models.CharField('Номер', max_length=10, default='01')
+    title = models.CharField('Название', max_length=100)
+    description = models.TextField('Описание')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Направления'
+        verbose_name_plural = 'Направления'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class ProcessStep(models.Model):
+    number = models.CharField('Номер', max_length=10, default='01')
+    title = models.CharField('Название', max_length=100)
+    description = models.TextField('Описание')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Шаги процесса'
+        verbose_name_plural = 'Шаги процесса'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class InfoCard(models.Model):
+    title = models.CharField('Заголовок', max_length=100)
+    description = models.TextField('Описание')
+    button_text = models.CharField('Кнопка', max_length=100, default='Подробнее →')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Карточка'
+        verbose_name_plural = 'Карточки'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class ContactItem(models.Model):
+    title = models.CharField('Заголовок', max_length=100)
+    main_text = models.CharField('Текст', max_length=200)
+    extra_text = models.CharField('Доп. текст', max_length=200, blank=True)
+    note = models.CharField('Подпись', max_length=200, blank=True)
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+
+class Event(models.Model):
+    title = models.CharField('Название', max_length=200)
+    category = models.CharField('Категория', max_length=50)
+    date = models.DateField('Дата')
+    time = models.TimeField('Время')
+    place = models.CharField('Место', max_length=200)
+    address = models.CharField('Адрес', max_length=200)
+    price = models.CharField('Цена', max_length=100)
+    image_file = models.ImageField('Фото (загрузить с компьютера)', upload_to='events/', blank=True)
+    image = models.URLField('Или ссылка на картинку', blank=True)
+    tag = models.CharField('Тег', max_length=50, blank=True)  # Пушкинская карта, Бесплатно
+    description = models.TextField('Описание', blank=True)
+    is_favorite = models.BooleanField('В избранном (подборка редакции)', default=False)
+ 
+    class Meta:
+        verbose_name = 'Событие'
+        verbose_name_plural = 'События'
+        ordering = ['date', 'time']
+ 
+    def __str__(self):
+        return self.title
+ 
+    @property
+    def image_url(self):
+        """Загруженный файл главнее ссылки."""
+        if self.image_file:
+            return self.image_file.url
+        return self.image
+ 
+ 
+class Movie(models.Model):
+    title = models.CharField('Название', max_length=200)
+    age = models.CharField('Возраст', max_length=10)
+    premiere = models.BooleanField('Премьера', default=False)
+    cinema = models.CharField('Кинотеатр', max_length=200)
+    times = models.CharField('Сеансы (старый текстовый способ)', max_length=200, blank=True)  # не нужно: используйте блок «Сеансы»
+    price = models.CharField('Цена', max_length=100)
+    image_file = models.ImageField('Постер (загрузить с компьютера)', upload_to='movies/', blank=True)
+    image = models.URLField('Или ссылка на постер', blank=True)
+    genre = models.CharField('Жанр', max_length=100, blank=True)  # Фантастика · Приключения · Драма
+    year = models.PositiveSmallIntegerField('Год', null=True, blank=True)
+    duration = models.PositiveSmallIntegerField('Длительность (минут)', null=True, blank=True)
+    country = models.CharField('Страна', max_length=100, blank=True)
+    lead = models.CharField('Краткое описание', max_length=300, blank=True)
+    description = models.TextField('Полное описание', blank=True)
+    is_favorite = models.BooleanField('В избранном (подборка редакции)', default=False)
+ 
+    class Meta:
+        verbose_name = 'Фильм'
+        verbose_name_plural = 'Фильмы'
+ 
+    def __str__(self):
+        return self.title
+ 
+    @property
+    def image_url(self):
+        if self.image_file:
+            return self.image_file.url
+        return self.image
+ 
+    def times_list(self):
+        """Время сеансов для списков: сначала из блока «Сеансы», иначе из старого текстового поля."""
+        times = [s.time.strftime('%H:%M') for s in self.sessions.all()]
+        if times:
+            return times
+        return [t.strip() for t in self.times.split(',') if t.strip()]
+ 
+ 
+class Actor(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='actors', verbose_name='Фильм')
+    name = models.CharField('Имя', max_length=100)
+    role = models.CharField('Роль', max_length=100, blank=True)
+    order = models.PositiveSmallIntegerField('Порядок', default=0)
+ 
+    class Meta:
+        verbose_name = 'Актёр'
+        verbose_name_plural = 'Актёры'
+        ordering = ['order', 'id']
+ 
+    def __str__(self):
+        return self.name
+ 
+ 
+class Session(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions', verbose_name='Фильм')
+    time = models.TimeField('Время')
+    format = models.CharField('Формат', max_length=20, default='2D', blank=True)
+    price = models.CharField('Цена (если отличается от общей)', max_length=100, blank=True)
+ 
+    class Meta:
+        verbose_name = 'Сеанс'
+        verbose_name_plural = 'Сеансы'
+        ordering = ['time']
+ 
+    def __str__(self):
+        return self.time.strftime('%H:%M')
+
+
+
+'''
+
+class Event(models.Model):
+    title = models.CharField('Название', max_length=200)
+    category = models.CharField('Категория', max_length=50)
+    date = models.DateField('Дата')
+    time = models.TimeField('Время')
+    place = models.CharField('Место', max_length=200)
+    address = models.CharField('Адрес', max_length=200)
+    price = models.CharField('Цена', max_length=100)
+    image_file = models.ImageField('Фото (загрузить с компьютера)', upload_to='events/', blank=True)
+    image = models.URLField('Или ссылка на картинку', blank=True)
+    tag = models.CharField('Тег', max_length=50, blank=True)  # Пушкинская карта, Бесплатно
+    description = models.TextField('Описание', blank=True)
+    is_favorite = models.BooleanField('В избранном (подборка редакции)', default=False)
+ 
+    class Meta:
+        verbose_name = 'Событие'
+        verbose_name_plural = 'События'
+        ordering = ['date', 'time']
+ 
+    def __str__(self):
+        return self.title
+ 
+    @property
+    def image_url(self):
+        """Загруженный файл главнее ссылки."""
+        if self.image_file:
+            return self.image_file.url
+        return self.image
+ 
+ 
+class Movie(models.Model):
+    title = models.CharField('Название', max_length=200)
+    age = models.CharField('Возраст', max_length=10)
+    premiere = models.BooleanField('Премьера', default=False)
+    cinema = models.CharField('Кинотеатр', max_length=200)
+    times = models.CharField('Сеансы', max_length=200)  # "16:40, 19:20, 21:50"
+    price = models.CharField('Цена', max_length=100)
+    image_file = models.ImageField('Постер (загрузить с компьютера)', upload_to='movies/', blank=True)
+    image = models.URLField('Или ссылка на постер', blank=True)
+    genre = models.CharField('Жанр', max_length=100, blank=True)  # Фантастика · Приключения · Драма
+    year = models.PositiveSmallIntegerField('Год', null=True, blank=True)
+    duration = models.PositiveSmallIntegerField('Длительность (минут)', null=True, blank=True)
+    country = models.CharField('Страна', max_length=100, blank=True)
+    lead = models.CharField('Краткое описание', max_length=300, blank=True)
+    description = models.TextField('Полное описание', blank=True)
+    is_favorite = models.BooleanField('В избранном (подборка редакции)', default=False)
+ 
+    class Meta:
+        verbose_name = 'Фильм'
+        verbose_name_plural = 'Фильмы'
+ 
+    def __str__(self):
+        return self.title
+ 
+    @property
+    def image_url(self):
+        if self.image_file:
+            return self.image_file.url
+        return self.image
+ 
+    def times_list(self):
+        """'16:40, 19:20' -> ['16:40', '19:20'] — для цикла в шаблоне."""
+        return [t.strip() for t in self.times.split(',') if t.strip()]
+ 
+ 
+class Actor(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='actors', verbose_name='Фильм')
+    name = models.CharField('Имя', max_length=100)
+    role = models.CharField('Роль', max_length=100, blank=True)
+    order = models.PositiveSmallIntegerField('Порядок', default=0)
+ 
+    class Meta:
+        verbose_name = 'Актёр'
+        verbose_name_plural = 'Актёры'
+        ordering = ['order', 'id']
+ 
+    def __str__(self):
+        return self.name
+'''

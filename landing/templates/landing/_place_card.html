@@ -1,0 +1,20 @@
+{% comment %}Карточка туристического места. Ожидает переменную p (TourPlace с p.active_tours).{% endcomment %}
+<li class="vb-tr-card" id="place-{{ p.id }}">
+ <div class="vb-tr-card__media">{% if p.image_url %}<img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy">{% endif %}<button type="button" class="vb-fav-btn" data-fav-type="place" data-fav-id="{{ p.id }}" aria-pressed="false" title="В избранное" aria-label="В избранное"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 5 6.3 5c2 0 3.5 1.1 4.2 2.3.4.6.6.9 1.5.9s1.1-.3 1.5-.9C14.2 6.1 15.7 5 17.7 5c3.4 0 5.4 3.4 3.9 6.8C19.5 16.4 12 21 12 21z"/></svg></button></div>
+ <div class="vb-tr-card__body">
+  <h3 class="vb-tr-card__title"><a href="{% url 'place_detail' p.id %}">{{ p.name }}</a></h3>
+  {% if p.location_line %}<div class="vb-tr-loc">{{ p.location_line }}</div>{% endif %}
+  {% if p.description %}<p class="vb-tr-desc">{{ p.description }}</p>{% endif %}
+  {% if p.tags_list %}<div class="vb-tr-tags">{% for tag in p.tags_list %}<span class="vb-tr-tag">{{ tag }}</span>{% endfor %}</div>{% endif %}
+  <a class="vb-tr-map" href="{{ p.map_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Открыть на Яндекс Картах</a>
+  <div class="vb-tr-with">
+   <div class="vb-tr-with__title">С этим местом</div>
+   {% for tt in p.active_tours|slice:":3" %}<a class="vb-tr-mini" href="{% url 'tour_detail' tt.id %}">
+    <span class="vb-tr-mini__img">{% if tt.image_url %}<img src="{{ tt.image_url }}" alt="" loading="lazy">{% endif %}</span>
+    <span class="vb-tr-mini__name">{{ tt.title }}</span>
+    <span class="vb-tr-mini__price">{{ tt.price_label }}</span>
+   </a>
+   {% empty %}<p class="vb-tr-none">Пока нет экскурсий — <a href="{% url 'suggest_tour' %}">предложите свою</a></p>{% endfor %}
+  </div>
+ </div>
+</li>

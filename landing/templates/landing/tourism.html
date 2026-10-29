@@ -1,0 +1,236 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% load ru_extras %}
+{% block title %}Туризм в Нальчике — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-tr-title" id="vb-tr-title" data-section-name="Заголовок" aria-labelledby="vb-tr-title-heading">
+ {% include "landing/_tourism_mountains.html" %}
+ <div class="vb-tr-title__inner">
+  <nav class="vb-tr-crumbs" aria-label="Навигация по сайту"><a href="{% url 'index' %}">Главная</a> <span aria-hidden="true">›</span> <span class="vb-tr-crumbs__current">Туризм</span></nav>
+  <h1 class="vb-tr-title__heading" id="vb-tr-title-heading">Туризм в Нальчике</h1>
+  <p class="vb-tr-title__sub">Экскурсии, походы и туры по Кабардино-Балкарии</p>
+ </div>
+</section>
+
+<section class="vb-tr" id="vb-tr" data-section-name="Предложения" aria-label="Экскурсии, походы, туры и гиды">
+ <div class="vb-tr__inner">
+  <div class="vb-tr-tabs" role="tablist" aria-label="Разделы туризма">
+   <button class="vb-tr-tab" type="button" role="tab" data-tab="excursion" aria-selected="true" aria-controls="tab-excursion"><span class="vb-tr-tab__ic"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="vb-tr-tab__name">Экскурсии</span><span class="vb-tr-tab__count">{{ excursions|length }} {{ excursions|length|ru_word:"предложение,предложения,предложений" }}</span></button>
+   <button class="vb-tr-tab" type="button" role="tab" data-tab="hike" aria-selected="false" aria-controls="tab-hike"><span class="vb-tr-tab__ic"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 20L12 4l10 16z"/><path d="M12 20v-6l-3 6M12 14l3 6"/></svg></span><span class="vb-tr-tab__name">Походы и треккинг</span><span class="vb-tr-tab__count">{{ hikes|length }} {{ hikes|length|ru_word:"предложение,предложения,предложений" }}</span></button>
+   <button class="vb-tr-tab" type="button" role="tab" data-tab="tour" aria-selected="false" aria-controls="tab-tour"><span class="vb-tr-tab__ic"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span><span class="vb-tr-tab__name">Туры</span><span class="vb-tr-tab__count">{{ tours|length }} {{ tours|length|ru_word:"предложение,предложения,предложений" }}</span></button>
+   <button class="vb-tr-tab" type="button" role="tab" data-tab="guides" aria-selected="false" aria-controls="tab-guides"><span class="vb-tr-tab__ic"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 5a3.5 3.5 0 0 1 0 7M18 14c2 .6 3.5 2.4 3.5 5"/></svg></span><span class="vb-tr-tab__name">Гиды</span><span class="vb-tr-tab__count">{{ guides|length }} {{ guides|length|ru_word:"гид,гида,гидов" }}</span></button>
+   <button class="vb-tr-tab" type="button" role="tab" data-tab="other" aria-selected="false" aria-controls="tab-other"><span class="vb-tr-tab__ic"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 17l-5.6 3 1.3-6.2L3 9.5l6.3-.7z"/></svg></span><span class="vb-tr-tab__name">Другое</span><span class="vb-tr-tab__count">{{ others|length }} {{ others|length|ru_word:"предложение,предложения,предложений" }}</span></button>
+  </div>
+
+  <div class="vb-tr-filters" id="vb-tr-filters">
+   <div class="vb-tr-fgroup"><div class="vb-tr-fgroup__label">Длительность</div><div class="vb-tr-fchips"><button class="vb-tr-fchip" type="button" data-group="duration" data-value="short">2–4 часа</button><button class="vb-tr-fchip" type="button" data-group="duration" data-value="half">Полдня</button><button class="vb-tr-fchip" type="button" data-group="duration" data-value="day">Целый день</button><button class="vb-tr-fchip" type="button" data-group="duration" data-value="multi">Многодневный</button></div></div>
+   <div class="vb-tr-fgroup"><div class="vb-tr-fgroup__label">Формат</div><div class="vb-tr-fchips"><button class="vb-tr-fchip" type="button" data-group="format" data-value="individual">Индивидуальная</button><button class="vb-tr-fchip" type="button" data-group="format" data-value="group">Групповая</button><button class="vb-tr-fchip" type="button" data-group="format" data-value="mini">Мини-группа</button></div></div>
+   <div class="vb-tr-fgroup"><div class="vb-tr-fgroup__label">Цена</div><div class="vb-tr-fchips"><button class="vb-tr-fchip" type="button" data-group="price" data-value="p1">1 000–3 000 ₽</button><button class="vb-tr-fchip" type="button" data-group="price" data-value="p2">3 000–10 000 ₽</button><button class="vb-tr-fchip" type="button" data-group="price" data-value="p3">от 10 000 ₽</button></div></div>
+   <button class="vb-tr-reset" type="button" data-reset>Сбросить</button>
+  </div>
+  <div class="vb-tr-found" id="vb-tr-found" aria-live="polite"></div>
+
+  <div class="vb-tr-panel" id="tab-excursion" data-tab="excursion" role="tabpanel">
+   <ul class="vb-tr-grid">{% for t in excursions %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>
+   {% if not excursions %}<div class="vb-tr-empty">Пока нет предложений в этом разделе — <a href="{% url 'suggest_tour' %}">предложите своё</a></div>{% endif %}
+   <div class="vb-tr-empty vb-tr-nomatch" hidden>По выбранным фильтрам ничего не нашлось. <button type="button" class="vb-tr-link" data-reset>Сбросить фильтры</button></div>
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+  <div class="vb-tr-panel" id="tab-hike" data-tab="hike" role="tabpanel" hidden>
+   <ul class="vb-tr-grid">{% for t in hikes %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>
+   {% if not hikes %}<div class="vb-tr-empty">Пока нет предложений в этом разделе — <a href="{% url 'suggest_tour' %}">предложите своё</a></div>{% endif %}
+   <div class="vb-tr-empty vb-tr-nomatch" hidden>По выбранным фильтрам ничего не нашлось. <button type="button" class="vb-tr-link" data-reset>Сбросить фильтры</button></div>
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+  <div class="vb-tr-panel" id="tab-tour" data-tab="tour" role="tabpanel" hidden>
+   <ul class="vb-tr-grid">{% for t in tours %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>
+   {% if not tours %}<div class="vb-tr-empty">Пока нет предложений в этом разделе — <a href="{% url 'suggest_tour' %}">предложите своё</a></div>{% endif %}
+   <div class="vb-tr-empty vb-tr-nomatch" hidden>По выбранным фильтрам ничего не нашлось. <button type="button" class="vb-tr-link" data-reset>Сбросить фильтры</button></div>
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+  <div class="vb-tr-panel" id="tab-guides" data-tab="guides" role="tabpanel" hidden>
+   <ul class="vb-tr-grid">{% for g in guides %}{% include "landing/_guide_card.html" %}{% endfor %}</ul>
+   {% if not guides %}<div class="vb-tr-empty">Гиды пока не добавлены.</div>{% endif %}
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+  <div class="vb-tr-panel" id="tab-other" data-tab="other" role="tabpanel" hidden>
+   <ul class="vb-tr-grid">{% for t in others %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>
+   {% if not others %}<div class="vb-tr-empty">Пока нет предложений в этом разделе — <a href="{% url 'suggest_tour' %}">предложите своё</a></div>{% endif %}
+   <div class="vb-tr-empty vb-tr-nomatch" hidden>По выбранным фильтрам ничего не нашлось. <button type="button" class="vb-tr-link" data-reset>Сбросить фильтры</button></div>
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== РАЗДЕЛИТЕЛЬ «КУДА ПОЕХАТЬ» (зелёный, с флагом КБР) =====
+  Флаг подставлен в строке ниже (--band-url). Чтобы заменить картинку, поменяйте ссылку в url('...').
+  Если не хотите картинку — напишите: --band-url: none; -->
+<section class="vb-tr-band" aria-label="Куда поехать">
+ <div class="vb-tr-band__bg" style="--band-url: url('https://opis-cdn.tinkoffjournal.ru/mercury/unconventional-kabardino-balkaria-trip-in.jpg');"></div>
+ <div class="vb-tr-band__inner">
+  <h2 class="vb-tr-band__title">Куда поехать в Кабардино-Балкарии</h2>
+ </div>
+</section>
+
+<section class="vb-tr-places" id="vb-tr-places" aria-labelledby="vb-tr-places-title">
+ <div class="vb-tr__inner">
+  <h2 class="vb-tr-section__title" id="vb-tr-places-title">Туристические места</h2>
+  <div class="vb-tr-list" id="vb-tr-places-list">
+   <ul class="vb-tr-grid">{% for p in places %}{% include "landing/_place_card.html" %}{% endfor %}</ul>
+   {% if not places %}<div class="vb-tr-empty">Места пока не добавлены. Их можно добавить в админке: «Туристические места».</div>{% endif %}
+   <div class="vb-tr-more" hidden><button type="button" class="vb-tr-morebtn" data-more>Показать все</button></div>
+  </div>
+ </div>
+</section>
+
+<section class="vb-tr-cta" aria-label="Разместить предложение">
+ <div class="vb-tr__inner">
+  <div class="vb-tr-cta__card">
+   <div class="vb-tr-cta__glow" aria-hidden="true"></div>
+   <div class="vb-tr-cta__text">
+    <div class="vb-tr-cta__title">Есть что показать?</div>
+    <div class="vb-tr-cta__sub">Экскурсии, походы, туры и места, которые стоит увидеть.</div>
+   </div>
+   <a class="vb-tr-cta__btn" href="{% url 'suggest_tour' %}">Разместить предложение</a>
+  </div>
+ </div>
+</section>
+
+{% include "landing/_tourism_css.html" %}
+<script>
+(function() {
+  var root = document.getElementById('vb-tr');
+  if (!root) return;
+  var LIMIT = 6;
+  var tabs = [].slice.call(root.querySelectorAll('.vb-tr-tab'));
+  var panels = [].slice.call(root.querySelectorAll('.vb-tr-panel'));
+  var filters = document.getElementById('vb-tr-filters');
+  var found = document.getElementById('vb-tr-found');
+  var placesBox = document.getElementById('vb-tr-places-list');
+  var state = { duration: '', format: '', price: '' };
+
+  function word(n, f) {
+    var a = Math.abs(n) % 100, b = a % 10;
+    if (a > 10 && a < 15) return f[2];
+    if (b === 1) return f[0];
+    if (b > 1 && b < 5) return f[1];
+    return f[2];
+  }
+  // Показывает карточки, подходящие под pass(), но не больше LIMIT, пока не нажато «Показать все»
+  function render(box, pass) {
+    var cards = [].slice.call(box.querySelectorAll('.vb-tr-grid > .vb-tr-card'));
+    var expanded = box.getAttribute('data-expanded') === '1';
+    var total = 0;
+    cards.forEach(function(c) {
+      var ok = pass(c);
+      if (ok) total++;
+      c.hidden = !(ok && (expanded || total <= LIMIT));
+    });
+    var more = box.querySelector('.vb-tr-more');
+    if (more) {
+      more.hidden = total <= LIMIT;
+      var b = more.querySelector('[data-more]');
+      if (b) b.textContent = expanded ? 'Свернуть' : 'Показать все (' + total + ')';
+    }
+    return { total: total, count: cards.length };
+  }
+  function passFilters(c) {
+    return (!state.duration || c.dataset.duration === state.duration) &&
+           (!state.format || c.dataset.format === state.format) &&
+           (!state.price || c.dataset.price === state.price);
+  }
+  function activePanel() {
+    return panels.filter(function(p) { return !p.hidden; })[0];
+  }
+  function apply() {
+    var p = activePanel();
+    if (!p) return;
+    var isGuides = p.dataset.tab === 'guides';
+    var r = render(p, isGuides ? function() { return true; } : passFilters);
+    if (isGuides) { found.textContent = ''; return; }
+    var nomatch = p.querySelector('.vb-tr-nomatch');
+    if (nomatch) nomatch.hidden = !(r.count > 0 && r.total === 0);
+    var active = state.duration || state.format || state.price;
+    found.innerHTML = r.count && active ? 'Найдено: <strong>' + r.total + '</strong> ' + word(r.total, ['предложение', 'предложения', 'предложений']) : '';
+  }
+  function renderPlaces() {
+    if (placesBox) render(placesBox, function() { return true; });
+  }
+  function showTab(name) {
+    tabs.forEach(function(t) { t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false'); });
+    panels.forEach(function(p) { p.hidden = p.dataset.tab !== name; });
+    filters.hidden = name === 'guides';
+    apply();
+  }
+  function resetFilters() {
+    state = { duration: '', format: '', price: '' };
+    [].forEach.call(root.querySelectorAll('.vb-tr-fchip'), function(c) { c.classList.remove('is-on'); });
+    apply();
+  }
+  function goTo(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var panel = el.closest('.vb-tr-panel');
+    if (panel && panel.hidden) showTab(panel.dataset.tab);
+    if (el.hidden) {
+      resetFilters();
+      var box = el.closest('.vb-tr-panel') || el.closest('.vb-tr-list');
+      if (box) box.setAttribute('data-expanded', '1');
+      apply();
+      renderPlaces();
+    }
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('is-flash');
+    setTimeout(function() { el.classList.remove('is-flash'); }, 1800);
+  }
+
+  tabs.forEach(function(t) {
+    t.addEventListener('click', function() {
+      showTab(t.dataset.tab);
+      if (history.replaceState) history.replaceState(null, '', '#tab-' + t.dataset.tab);
+    });
+  });
+  [].forEach.call(root.querySelectorAll('.vb-tr-fchip'), function(chip) {
+    chip.addEventListener('click', function() {
+      var g = chip.dataset.group, v = chip.dataset.value;
+      var same = state[g] === v;
+      state[g] = same ? '' : v;
+      [].forEach.call(root.querySelectorAll('.vb-tr-fchip[data-group="' + g + '"]'), function(c) { c.classList.remove('is-on'); });
+      if (!same) chip.classList.add('is-on');
+      apply();
+    });
+  });
+  [].forEach.call(document.querySelectorAll('[data-reset]'), function(b) { b.addEventListener('click', resetFilters); });
+  [].forEach.call(document.querySelectorAll('[data-more]'), function(btn) {
+    btn.addEventListener('click', function() {
+      var box = btn.closest('.vb-tr-panel') || btn.closest('.vb-tr-list');
+      var open = box.getAttribute('data-expanded') === '1';
+      box.setAttribute('data-expanded', open ? '0' : '1');
+      if (box === placesBox) renderPlaces(); else apply();
+    });
+  });
+
+  // Ссылки вида #tour-5 / #guide-2 / #place-3 внутри этой страницы
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if (!/^(tour|guide|place)-\d+$/.test(id)) return;
+    e.preventDefault();
+    goTo(id);
+  });
+
+  // Стартовая вкладка: из адреса (#tab-hike) или первая, где есть предложения
+  var start = null, h = location.hash.slice(1);
+  if (/^tab-/.test(h)) start = h.slice(4);
+  if (!start || !tabs.some(function(t) { return t.dataset.tab === start; })) {
+    var first = panels.filter(function(p) { return p.querySelector('.vb-tr-card'); })[0];
+    start = first ? first.dataset.tab : 'excursion';
+  }
+  showTab(start);
+  renderPlaces();
+  if (/^(tour|guide|place)-\d+$/.test(h)) setTimeout(function() { goTo(h); }, 50);
+})();
+</script>
+{% endblock %}
+{% block page_theme %}{% include "landing/_tourism_theme.html" %}{% endblock %}

@@ -1,0 +1,544 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{% block title %}Нальчик.Афиша{% endblock %}</title>
+<meta name="format-detection" content="telephone=no" />
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Onest:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%AD%3C/text%3E%3C/svg%3E">
+
+{% block extra_head %}{% endblock %}
+</head>
+<body class="t-body" style="margin:0;">
+<div id="allrecords" class="t-records">
+<div id="rec-main" class="r t-rec" style=" " data-record-type="1370">
+<div class="t1370">
+
+<!-- ===== ШАПКА ===== -->
+<section class="vb-h7k-header" id="vb-h7k-header" data-section-name="Шапка" aria-label="Шапка сайта" data-vibeblock-unique-section="yes"> <div class="vb-h7k-header__inner"> <a class="vb-h7k-header__brand" href="{% url 'index' %}" aria-label="На главную — Нальчик.Афиша"><img class="vb-h7k-header__logo-img" src="{% static 'landing/img/logo.png' %}" alt="Нальчик.Афиша"> <span class="vb-h7k-header__brand-text"> <span class="vb-h7k-header__brand-name">Нальчик.Афиша</span> <span class="vb-h7k-header__brand-sub">КБР</span> </span></a> <form class="vb-h7k-header__search" role="search" onsubmit="return false"> <img class="vb-h7k-header__search-icon" src="{% static 'landing/img/icons/search.svg' %}" alt="" aria-hidden="true"> <input class="vb-h7k-header__search-input" type="search" placeholder="Событие, место, артист…" aria-label="Поиск"> <button class="vb-h7k-header__search-btn" type="submit" aria-label="Найти">Найти</button> </form> <nav class="vb-h7k-header__nav" aria-label="Пользовательские действия"> <a class="vb-h7k-header__nav-link" href="{% url 'favorites' %}"><img class="vb-h7k-header__nav-icon" src="{% static 'landing/img/icons/star.svg' %}" alt="" aria-hidden="true"> <span class="vb-h7k-header__nav-text">Избранное</span></a> {% if user.is_authenticated %}<a class="vb-h7k-header__nav-link" href="{% url 'cabinet_tickets' %}">
+  {% if profile.avatar %}<img class="vb-h7k-header__avatar" src="{{ profile.avatar.url }}" alt="">{% else %}<img class="vb-h7k-header__nav-icon" src="{% static 'landing/img/icons/user.svg' %}" alt="" aria-hidden="true">{% endif %}
+  <span class="vb-h7k-header__nav-text">{{ user.first_name|default:"Личный кабинет" }}</span>
+</a>{% else %}<button type="button" class="vb-h7k-header__nav-link" data-auth-open="login">
+  <img class="vb-h7k-header__nav-icon" src="{% static 'landing/img/icons/user.svg' %}" alt="" aria-hidden="true">
+  <span class="vb-h7k-header__nav-text">Войти</span>
+</button>{% endif %} </nav> </div> </section>
+
+<!-- ===== ЛЕНТА КАТЕГОРИЙ ===== -->
+<section class="vb-c2m-cats" id="vb-c2m-cats" data-section-name="Категории" aria-label="Разделы афиши" data-vibeblock-unique-section="yes"> <div class="vb-c2m-cats__inner"> <ul class="vb-c2m-cats__list" role="tablist"><li><a class="vb-c2m-cats__item{% if request.resolver_match.url_name != 'kino' and request.resolver_match.url_name != 'tourism' and request.resolver_match.url_name != 'tour_detail' and request.resolver_match.url_name != 'place_detail' and request.resolver_match.url_name != 'guide_detail' %} vb-c2m-cats__item--active{% endif %}" href="{% url 'afisha' %}" role="tab" aria-selected="{% if request.resolver_match.url_name != 'kino' %}true{% else %}false{% endif %}">Все</a></li> <li><a class="vb-c2m-cats__item{% if request.resolver_match.url_name == 'kino' %} vb-c2m-cats__item--active{% endif %}" href="{% url 'kino' %}" role="tab" aria-selected="{% if request.resolver_match.url_name == 'kino' %}true{% else %}false{% endif %}">Кино</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Театры</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Концерты</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Спорт</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Выставки</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Дети</a></li> <li><a class="vb-c2m-cats__item" href="#" role="tab">Бесплатно</a><a class="vb-c2m-cats__item" href="#" role="tab">Другое</a></li> <li><a class="vb-c2m-cats__item vb-c2m-cats__item--accent" href="#" role="tab">Пушкинская карта</a></li> <li><a class="vb-c2m-cats__item vb-c2m-cats__item--tourism{% if request.resolver_match.url_name == 'tourism' %} vb-c2m-cats__item--active{% endif %}" href="{% url 'tourism' %}" role="tab" aria-selected="{% if request.resolver_match.url_name == 'tourism' %}true{% else %}false{% endif %}"><svg class="vb-c2m-cats__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>Туризм</a></li> </ul> </div> </section>
+
+<!-- ===== УНИКАЛЬНЫЙ КОНТЕНТ СТРАНИЦЫ ===== -->
+{% block content %}{% endblock %}
+
+<!-- ===== ПОДВАЛ ===== -->
+<section class="vb-ft5-footer" id="vb-ft5-footer" data-section-name="Подвал" aria-label="Подвал сайта" data-vibeblock-unique-section="yes"> <div class="vb-ft5-footer__inner"> <div class="vb-ft5-footer__top"> <div class="vb-ft5-footer__brand"> <a class="vb-ft5-footer__logo" href="{% url 'index' %}"> <span class="vb-ft5-footer__mark" aria-hidden="true">Н</span> <span class="vb-ft5-footer__name">Нальчик.Афиша</span> </a> <p class="vb-ft5-footer__about">Городской портал событий: афиша, кино, концерты, фестивали и&nbsp;полезные сервисы для жителей Нальчика.</p> <div class="vb-ft5-footer__social"> <a class="vb-ft5-footer__social-link" href="#" aria-label="Telegram"> <img src="{% static 'landing/img/icons/mail.svg' %}" alt="" aria-hidden="true">
+            Telegram
+          </a> <a class="vb-ft5-footer__social-link" href="#" aria-label="MAX"> <img src="{% static 'landing/img/icons/mail.svg' %}" alt="" aria-hidden="true">
+            MAX
+          </a> <a class="vb-ft5-footer__social-link" href="#" aria-label="VK"> <img src="{% static 'landing/img/icons/mail.svg' %}" alt="" aria-hidden="true">
+            VK
+          </a> </div> </div> <nav class="vb-ft5-footer__nav" aria-label="Разделы сайта"> <h3 class="vb-ft5-footer__nav-title">Афиша</h3> <ul class="vb-ft5-footer__nav-list"> <li><a href="{% url 'afisha' %}">Афиша</a></li> <li><a href="#">Календарь</a></li> <li><a href="{% url 'kino' %}">Кино</a></li> <li><a href="#">Театры</a></li> <li><a href="#">Концерты</a></li> </ul> </nav> <nav class="vb-ft5-footer__nav" aria-label="Город"> <h3 class="vb-ft5-footer__nav-title">Город</h3> <ul class="vb-ft5-footer__nav-list"> <li><a href="#">Погода</a></li> <li><a href="#">Транспорт</a></li> <li><a href="#">Справочник</a></li> </ul> </nav> <nav class="vb-ft5-footer__nav" aria-label="Организаторам"> <h3 class="vb-ft5-footer__nav-title">Организаторам</h3> <ul class="vb-ft5-footer__nav-list"> <li><a href="{% url 'suggest' %}">Добавить событие</a></li> <li><a href="#">Личный кабинет</a></li> <li><a href="#">О&nbsp;проекте</a></li> </ul> </nav> </div> <div class="vb-ft5-footer__bottom"> <span>© 2026 Нальчик.Афиша</span> <span>Сделано для жителей Нальчика</span> </div> </div> </section>
+
+<!-- ===== ОБЩИЕ СТИЛИ (шапка, категории, подвал) ===== -->
+<style>
+.vb-h7k-header,
+.vb-h7k-header * { box-sizing: border-box; }
+.vb-h7k-header input,
+.vb-h7k-header textarea,
+.vb-h7k-header select { font: inherit; }
+
+.vb-h7k-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #ffffff;
+  border-bottom: 1px solid #eef0f3;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+}
+.vb-h7k-header__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+.vb-h7k-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #0f172a;
+}
+.vb-h7k-header__mark {
+  width: 80px;
+  height: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.vb-h7k-header__mountains {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.vb-h7k-header__brand-text {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.05;
+}
+.vb-h7k-header__brand-name {
+  font-family: var(--t-headline-font), 'Georgia', 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: #0f172a;
+}
+.vb-h7k-header__brand-sub {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #2a5db0;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.vb-h7k-header__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid #e2e6ee;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.vb-h7k-header__search:focus-within {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+.vb-h7k-header__search-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.55;
+}
+.vb-h7k-header__search-input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 15px;
+  color: #0f172a;
+  min-width: 0;
+}
+.vb-h7k-header__search-input::placeholder {
+  color: #8a93a3;
+}
+.vb-h7k-header__search-btn {
+  border: 0;
+  background: transparent;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1FAE63;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+.vb-h7k-header__search-btn:hover {
+  background: rgba(31, 174, 99, 0.08);
+}
+.vb-h7k-header__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
+.vb-h7k-header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #0f172a;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.vb-h7k-header__nav-link:hover {
+  background: #f3f5f8;
+}
+.vb-h7k-header__nav-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+.vb-h7k-header__avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; display: block; }
+.vb-h7k-header__nav-cta {
+  background: #1FAE63;
+  color: #fff !important;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(31, 174, 99, 0.32);
+  transition: background 0.15s, transform 0.15s;
+}
+.vb-h7k-header__nav-cta:hover {
+  background: #189652;
+  transform: translateY(-1px);
+}
+.vb-h7k-header__nav-cta .t-btnflex__text {
+  color: #fff;
+}
+
+@media (max-width: 960px) {
+  .vb-h7k-header__inner {
+    grid-template-columns: auto auto;
+    justify-content: flex-start;
+    column-gap: 16px;
+    row-gap: 8px;
+    padding: 10px 14px;
+  }
+  .vb-h7k-header__search {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .vb-h7k-header__brand-name {
+    display: inline-block;
+    font-size: 15px;
+  }
+  .vb-h7k-header__nav {
+    margin-left: auto;
+    gap: 4px;
+  }
+  .vb-h7k-header__nav-text {
+    display: inline-block;
+    font-size: 13px;
+  }
+  .vb-h7k-header__nav-link {
+    padding: 6px 6px;
+    gap: 5px;
+  }
+  .vb-h7k-header__mark {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 640px) {
+  .vb-h7k-header__inner {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+  }
+  .vb-h7k-header__search {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .vb-h7k-header__nav-cta {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
+</style>
+<style>
+.vb-c2m-cats,
+.vb-c2m-cats * { box-sizing: border-box; }
+.vb-c2m-cats input,
+.vb-c2m-cats textarea,
+.vb-c2m-cats select { font: inherit; }
+
+.vb-c2m-cats {
+  background: #ffffff;
+  border-bottom: 1px solid #eef0f3;
+  position: sticky;
+  top: 67px;
+  z-index: 40;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+}
+.vb-c2m-cats__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px 32px;
+}
+.vb-c2m-cats__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.vb-c2m-cats__list::-webkit-scrollbar { display: none; }
+.vb-c2m-cats__item {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #475569;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.vb-c2m-cats__item:hover {
+  background: #f3f5f8;
+  color: #0f172a;
+}
+.vb-c2m-cats__item--active {
+  background: #4a90e2;
+  color: #ffffff;
+}
+.vb-c2m-cats__item--active:hover {
+  background: #3a7bc8;
+  color: #ffffff;
+}
+.vb-c2m-cats__item--accent {
+  color: #b85c00;
+  background: #fff4e5;
+}
+.vb-c2m-cats__item--accent:hover {
+  background: #ffe5c2;
+}
+
+.vb-c2m-cats__item--tourism {
+  border: 1px solid #e2e6ee;
+}
+.vb-c2m-cats__icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.vb-c2m-cats__item--active .vb-c2m-cats__icon {
+  opacity: 1;
+}
+.vb-c2m-cats__item--tourism:hover {
+  border-color: #c8d6ee;
+}
+.vb-c2m-cats__item--tourism.vb-c2m-cats__item--active {
+  border-color: #4a90e2;
+}
+
+@media (max-width: 960px) {
+  .vb-c2m-cats__inner { padding: 8px 18px; }
+  .vb-c2m-cats { top: 65px; }
+}
+@media (max-width: 640px) {
+  .vb-c2m-cats__item { padding: 8px 14px; font-size: 13px; }
+}
+</style>
+<style>
+.vb-ft5-footer,
+.vb-ft5-footer * { box-sizing: border-box; }
+.vb-ft5-footer input,
+.vb-ft5-footer textarea,
+.vb-ft5-footer select { font: inherit; }
+
+.vb-ft5-footer {
+  background: #ffffff;
+  color: #475569;
+  border-top: 1px solid #eef0f3;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+}
+.vb-ft5-footer__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 32px 24px;
+}
+.vb-ft5-footer__top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid #eef0f3;
+}
+.vb-ft5-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+.vb-ft5-footer__mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #1FAE63;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--t-headline-font), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+}
+.vb-ft5-footer__name {
+  font-family: var(--t-headline-font), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+}
+.vb-ft5-footer__about {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #6b7280;
+  margin: 0 0 18px;
+  max-width: 380px;
+}
+.vb-ft5-footer__social {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.vb-ft5-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #f3f5f8;
+  border: 1px solid #e2e6ee;
+  color: #0f172a;
+  text-decoration: none;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s;
+}
+.vb-ft5-footer__social-link:hover {
+  background: rgba(31, 174, 99, 0.08);
+  border-color: #1FAE63;
+  color: #1FAE63;
+}
+.vb-ft5-footer__social-link img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+.vb-ft5-footer__nav-title {
+  font-family: var(--t-headline-font), system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 16px;
+}
+.vb-ft5-footer__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.vb-ft5-footer__nav-list a {
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 14px;
+  color: #475569;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.vb-ft5-footer__nav-list a:hover { color: #1FAE63; }
+
+.vb-ft5-footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 22px;
+  font-family: var(--t-text-font), system-ui, sans-serif;
+  font-size: 13px;
+  color: #8a93a3;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 960px) {
+  .vb-ft5-footer__inner { padding: 36px 18px 20px; }
+  .vb-ft5-footer__top {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+}
+@media (max-width: 640px) {
+  .vb-ft5-footer__top { grid-template-columns: 1fr; }
+  .vb-ft5-footer__bottom { flex-direction: column; align-items: flex-start; }
+}
+</style>
+<style>
+/* ===== Базовые стили (замена CSS Tilda), нулевая специфичность — не перебивают дизайн блоков ===== */
+html { scroll-behavior: smooth; }
+:where(.t-body) { margin: 0; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }
+:where(.t-records) { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+:where(.t1370) :is(h1,h2,h3,h4,h5,h6,p,ul,ol,figure,blockquote) { margin: 0; padding: 0; }
+:where(.t1370) :is(ul,ol) { list-style: none; }
+:where(.t1370) a { color: inherit; text-decoration: none; }
+:where(.t1370) img { max-width: 100%; border: 0; }
+:where(.t1370) button { font: inherit; cursor: pointer; }
+:where(.t-btnflex) { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none; cursor: pointer; text-align: center; }
+:where(.t-btnflex_md) { padding: 12px 22px; min-height: 44px; font-size: 15px; }
+:where(.t-btnflex_lg) { padding: 14px 28px; min-height: 52px; font-size: 16px; }
+:where(.t-btnflex__text) { display: inline-block; }
+/* заглушка, пока картинка не загрузилась или не задана */
+:where(.vb-ev9-event__media, .vb-kn1-movie__poster, .vb-cn3-movie__poster, .vb-ev1-hero__media) { background: linear-gradient(135deg, #dbeafe 0%, #dcfce7 100%); }
+</style>
+{% block page_theme %}{% endblock %}
+<style>
+:root {
+  /* ===== ШРИФТЫ: меняются только здесь (+ ссылка Google Fonts в <head>) ===== */
+  --vb-font-body: 'Onest', 'Segoe UI', Tahoma, Verdana, Arial, sans-serif;
+  --vb-font-head: 'Manrope', 'Onest', 'Segoe UI', Verdana, Arial, sans-serif;
+  --t-text-font: var(--vb-font-body);
+  --t-headline-font: var(--vb-font-head);
+}
+html, body, .t-body { font-family: var(--vb-font-body) !important; -webkit-font-smoothing: antialiased; }
+.t-body, .t1370, .t1370 *, .t1370 button, .t1370 input { font-family: var(--vb-font-body) !important; }
+.t1370 h1, .t1370 h2, .t1370 h3, .t1370 [class*="__title"], .t1370 [class*="__heading"], .t1370 [class*="brand-name"], .t1370 [class*="btn"], .t1370 [class*="__price"] strong { font-family: var(--vb-font-head) !important; letter-spacing: 0; }
+.t1370 h1, .t1370 h2, .t1370 h3 { font-weight: 700 !important; }
+.vb-h7k-header__brand { display: inline-flex; align-items: center; gap: 12px; }
+/* мягкие формы */
+.vb-ev9-event, .vb-kn1-movie, .vb-cn3-movie, .vb-ev1-block, .vb-ev1-hero__media, .vb-ev9-side-promo, .vb-ev9-side-tip, .vb-bg8-place { border-radius: 20px !important; }
+.vb-ev9-event__media, .vb-kn1-movie__poster, .vb-cn3-movie__poster { border-radius: 20px 20px 0 0; }
+.t1370 .t-btnflex, .t1370 [class*="__btn"], .t1370 [class*="-btn"], .t1370 [class*="__chip"], .t1370 [class*="__tag"], .t1370 [class*="__cat"] { border-radius: 999px !important; }
+.vb-ev9-event, .vb-kn1-movie, .vb-cn3-movie { box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08); overflow: hidden; }
+.vb-h7k-header__logo-img { height: 46px; width: auto; max-width: 120px; display: block; flex-shrink: 0; object-fit: contain; }
+</style>
+
+<!-- ===== ОБЩИЕ СКРИПТЫ ===== -->
+<script>
+(function() {
+  // Ссылки категорий без страницы (href="#") не должны прыгать наверх.
+  // Ссылки с реальным адресом работают как обычно.
+  document.querySelectorAll('#vb-c2m-cats .vb-c2m-cats__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      if (item.getAttribute('href') === '#') e.preventDefault();
+    });
+  });
+})();
+</script>
+
+</div>
+</div>
+</div>
+{% include "landing/_auth_modals.html" %}
+{% include "landing/_fav_js.html" %}
+</body>
+</html>

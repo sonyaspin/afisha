@@ -1,0 +1,27 @@
+{% load ru_extras %}
+{% comment %}Карточка гида. Ожидает переменную g (Guide с g.active_tours).{% endcomment %}
+<li class="vb-tr-card vb-tr-guide" id="guide-{{ g.id }}">
+ <button type="button" class="vb-fav-btn" data-fav-type="guide" data-fav-id="{{ g.id }}" aria-pressed="false" title="В избранное" aria-label="В избранное"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 5 6.3 5c2 0 3.5 1.1 4.2 2.3.4.6.6.9 1.5.9s1.1-.3 1.5-.9C14.2 6.1 15.7 5 17.7 5c3.4 0 5.4 3.4 3.9 6.8C19.5 16.4 12 21 12 21z"/></svg></button>
+ <div class="vb-tr-guide__top">
+  <div class="vb-tr-guide__ava">{% if g.image_url %}<img src="{{ g.image_url }}" alt="{{ g.name }}" loading="lazy">{% endif %}</div>
+  <div>
+   <h3 class="vb-tr-card__title" style="margin-bottom:4px;"><a href="{% url 'guide_detail' g.id %}">{{ g.name }}</a></h3>
+   <div class="vb-tr-rate"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 17l-5.6 3 1.3-6.2L3 9.5l6.3-.7z"/></svg> <strong>{{ g.rating|stringformat:".2f" }}</strong> · {{ g.reviews_count }} {{ g.reviews_count|ru_word:"отзыв,отзыва,отзывов" }}</div>
+  </div>
+ </div>
+ <div class="vb-tr-card__body">
+  {% if g.specialization %}<div class="vb-tr-spec">{{ g.specialization }}</div>{% endif %}
+  {% if g.languages_list %}<div class="vb-tr-tags">{% for lang in g.languages_list %}<span class="vb-tr-tag">{{ lang }}</span>{% endfor %}</div>{% endif %}
+  {% if g.active_tours %}<div class="vb-tr-with">
+   <div class="vb-tr-with__title">Экскурсии гида</div>
+   {% for tt in g.active_tours|slice:":3" %}<a class="vb-tr-mini" href="{% url 'tour_detail' tt.id %}">
+    <span class="vb-tr-mini__img">{% if tt.image_url %}<img src="{{ tt.image_url }}" alt="" loading="lazy">{% endif %}</span>
+    <span class="vb-tr-mini__name">{{ tt.title }}</span>
+    <span class="vb-tr-mini__price">{{ tt.price_label }}</span>
+   </a>{% endfor %}
+  </div>{% endif %}
+  <div class="vb-tr-card__foot" style="margin-top:14px;">
+   {% if g.contact_url %}<a class="vb-tr-btn" href="{{ g.contact_url }}" target="_blank" rel="noopener">Написать гиду</a>{% else %}<a class="vb-tr-btn" href="{% url 'guide_detail' g.id %}">Подробнее о гиде</a>{% endif %}
+  </div>
+ </div>
+</li>

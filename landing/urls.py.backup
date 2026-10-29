@@ -1,0 +1,11 @@
+# landing/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('afisha/', views.afisha, name='afisha'),
+    path('event/<int:event_id>/', views.event, name='event'),
+    path('kino/', views.kino, name='kino'),
+]
+

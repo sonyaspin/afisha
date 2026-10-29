@@ -1,0 +1,45 @@
+body, .content-wrapper, .main-sidebar, .navbar {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.content-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+#result_list th,
+#result_list td {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+.btn {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
+.nav-sidebar .nav-link {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+.form-control {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+.content-wrapper {
+    background: #ffffff;
+}
+
+
+#result_list thead th {
+    background: #f5f5f5;
+    font-weight: 700;
+    color: #333;
+}

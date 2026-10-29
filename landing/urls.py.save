@@ -1,0 +1,22 @@
+# landing/urls.py — ПОЛНАЯ версия (замените файл целиком)
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('afisha/', views.afisha, name='afisha'),
+    path('event/<int:event_id>/', views.event, name='event'),
+    path('kino/', views.kino, name='kino'),
+    # НОВОЕ:
+    path('movie/<int:movie_id>/', views.movie, name='movie'),
+    path('favorites/', views.favorites, name='favorites'),
+    path('suggest/', views.suggest, name='suggest'),
+    # Туризм:
+    path('tourism/', views.tourism, name='tourism'),
+
+
+    # Личный кабинет (визуал):
+    path('cabinet/tickets/', views.cabinet_tickets, name='cabinet_tickets'),
+    path('cabinet/events/', views.cabinet_events, name='cabinet_events'),
+    path('cabinet/settings/', views.cabinet_settings, name='cabinet_settings'),
+]

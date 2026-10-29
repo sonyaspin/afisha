@@ -1,0 +1,20 @@
+{% comment %}Карточка экскурсии / похода / тура / «другого». Ожидает переменную t (Tour).{% endcomment %}
+<li class="vb-tr-card" id="tour-{{ t.id }}" data-duration="{{ t.duration_group }}" data-format="{{ t.format }}" data-price="{{ t.price_group }}">
+ <div class="vb-tr-card__media">{% if t.image_url %}<img src="{{ t.image_url }}" alt="{{ t.title }}" loading="lazy">{% endif %}
+  <button type="button" class="vb-fav-btn" data-fav-type="tour" data-fav-id="{{ t.id }}" aria-pressed="false" title="В избранное" aria-label="В избранное"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 5 6.3 5c2 0 3.5 1.1 4.2 2.3.4.6.6.9 1.5.9s1.1-.3 1.5-.9C14.2 6.1 15.7 5 17.7 5c3.4 0 5.4 3.4 3.9 6.8C19.5 16.4 12 21 12 21z"/></svg></button>
+  <div class="vb-tr-card__badges">
+   <span class="vb-tr-badge">{{ t.badge }}</span>{% if t.kind == 'hike' and t.difficulty %}<span class="vb-tr-badge vb-tr-badge--{{ t.difficulty }}">{{ t.difficulty_label }}</span>{% endif %}
+  </div>
+ </div>
+ <div class="vb-tr-card__body">
+  <h3 class="vb-tr-card__title"><a href="{% url 'tour_detail' t.id %}">{{ t.title }}</a></h3>
+  {% if t.when_label %}<div class="vb-tr-when"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>{{ t.when_label }}</div>{% endif %}
+  <div class="vb-tr-facts">{% for f in t.facts %}<span>{{ f }}</span>{% endfor %}<span class="vb-tr-price">{{ t.price_label }}</span></div>
+  {% if t.kind == 'tour' %}{% if t.program or t.description %}<p class="vb-tr-desc">{{ t.program|default:t.description }}</p>{% endif %}{% elif t.description %}<p class="vb-tr-desc">{{ t.description }}</p>{% endif %}
+  {% if t.kind != 'other' %}{% with places=t.places.all %}{% if places %}<div class="vb-tr-ptags">{% for p in places|slice:":3" %}<a class="vb-tr-ptag" href="{% url 'place_detail' p.id %}">{{ p.name }} →</a>{% endfor %}</div>{% endif %}{% endwith %}{% endif %}
+  {% if t.guide %}<div class="vb-tr-by">Гид: <a href="{% url 'guide_detail' t.guide.id %}">{{ t.guide.name }}</a></div>{% endif %}
+  <div class="vb-tr-card__foot">
+   {% if t.booking_url %}<a class="vb-tr-btn" href="{{ t.booking_url }}" target="_blank" rel="noopener">{{ t.button_label }}</a>{% else %}<a class="vb-tr-btn" href="{% url 'tour_detail' t.id %}">{{ t.button_label }}</a>{% endif %}
+  </div>
+ </div>
+</li>

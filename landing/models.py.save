@@ -1,0 +1,101 @@
+from django.db import models
+
+
+class SiteSettings(models.Model):
+    company_name = models.CharField('Название', max_length=100, default='IT_COMPANY')
+    tagline = models.CharField('Подзаголовок', max_length=200, default='разработка · инфраструктура')
+    hero_line1 = models.CharField('Заголовок 1', max_length=100, default='Строим цифровые')
+    hero_line2 = models.CharField('Заголовок 2', max_length=100, default='продукты для')
+    hero_line3 = models.CharField('Заголовок 3', max_length=100, default='бизнеса')
+    hero_text = models.TextField(
+        'Текст справа',
+        default='Небольшая команда. Фокус на качестве, а не на количестве проектов. Работаем с компаниями, которым важна надёжность.'
+    )
+    footer_text = models.CharField('Низ', max_length=200, default='© 2026 IT_COMPANY')
+
+    class Meta:
+        verbose_name = 'Шапка сайта'
+        verbose_name_plural = 'Шапка сайта'
+
+    def __str__(self):
+        return 'Настройки'
+
+
+class Stat(models.Model):
+    value = models.CharField('Значение', max_length=50)
+    label = models.CharField('Подпись', max_length=200)
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Цифра'
+        verbose_name_plural = 'Цифры'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.value
+
+
+class Service(models.Model):
+    number = models.CharField('Номер', max_length=10, default='01')
+    title = models.CharField('Название', max_length=100)
+    description = models.TextField('Описание')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Направления'
+        verbose_name_plural = 'Направления'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class ProcessStep(models.Model):
+    number = models.CharField('Номер', max_length=10, default='01')
+    title = models.CharField('Название', max_length=100)
+    description = models.TextField('Описание')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Шаги процесса'
+        verbose_name_plural = 'Шаги процесса'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class InfoCard(models.Model):
+    title = models.CharField('Заголовок', max_length=100)
+    description = models.TextField('Описание')
+    button_text = models.CharField('Кнопка', max_length=100, default='Подробнее →')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Карточка'
+        verbose_name_plural = 'Карточки'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class ContactItem(models.Model):
+    title = models.CharField('Заголовок', max_length=100)
+    main_text = models.CharField('Текст', max_length=200)
+    extra_text = models.CharField('Доп. текст', max_length=200, blank=True)
+    note = models.CharField('Подпись', max_length=200, blank=True)
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+
+
+from django.db import model

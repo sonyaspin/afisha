@@ -1,0 +1,77 @@
+# landing/views.py — ПОЛНАЯ версия (замените файл целиком)
+from datetime import timedelta
+
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+
+from .models import Event, Movie
+
+
+def _days(n=14):
+    """Даты для календарной ленты: сегодня + следующие n-1 дней."""
+    today = timezone.localdate()
+    return [today + timedelta(days=i) for i in range(n)]
+
+
+def index(request):
+    context = {
+        'latest_events': Event.objects.all()[:3],
+        'latest_movies': Movie.objects.prefetch_related('sessions')[:8],
+        'events_count': Event.objects.count(),
+        'days': _days(),
+    }
+    return render(request, 'landing/index.html', context)
+
+
+def afisha(request):
+    events = Event.objects.all()
+    return render(request, 'landing/afisha.html', {
+        'events': events,
+        'free_count': events.filter(tag='Бесплатно').count(),
+    })
+
+
+def event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    return render(request, 'landing/event.html', {'event': event})
+
+
+def kino(request):
+    movies = Movie.objects.prefetch_related('sessions')
+    return render(request, 'landing/kino.html', {
+        'movies': movies,
+        'premieres_count': movies.filter(premiere=True).count(),
+        'days': _days(),
+    })
+
+
+# ---------- НОВОЕ: добавьте в конец файла ----------
+def movie(request, movie_id):
+    movie = get_object_or_404(Movie.objects.prefetch_related('sessions', 'actors'), id=movie_id)
+    return render(request, 'landing/movie.html', {'movie': movie})
+
+
+def favorites(request):
+    # Подборка редакции: в админке у события/фильма ставится галочка «В избранном».
+    return render(request, 'landing/favorites.html', {
+        'events': Event.objects.filter(is_favorite=True),
+        'movies': Movie.objects.filter(is_favorite=True).prefetch_related('sessions'),
+    })
+
+
+def suggest(request):
+    # Пока только визуал: форма никуда не отправляется.
+    return render(request, 'landing/suggest.html')
+
+
+# ---------- Личный кабинет (только визуал, данные в шаблонах) ----------
+def cabinet_tickets(request):
+    return render(request, 'landing/cabinet_tickets.html')
+
+
+def cabinet_events(request):
+    return render(request, 'landing/cabinet_events.html')
+
+
+def cabinet_settings(request):
+    return render(request, 'landing/cabinet_settings.html')

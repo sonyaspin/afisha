@@ -1,0 +1,43 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% load ru_extras %}
+{% block title %}{{ guide.name }} — Нальчик.Афиша{% endblock %}
+{% block content %}
+<section class="vb-tr-title vb-tr-title--sm" aria-labelledby="vb-td-h1">
+ {% include "landing/_tourism_mountains.html" %}
+ <div class="vb-tr-title__inner">
+  <nav class="vb-tr-crumbs" aria-label="Навигация по сайту"><a href="{% url 'index' %}">Главная</a> <span aria-hidden="true">›</span> <a href="{% url 'tourism' %}#tab-guides">Гиды</a> <span aria-hidden="true">›</span> <span class="vb-tr-crumbs__current">{{ guide.name }}</span></nav>
+  <h1 class="vb-tr-title__heading" id="vb-td-h1">{{ guide.name }}</h1>
+  {% if guide.specialization %}<p class="vb-tr-title__sub">{{ guide.specialization }}</p>{% endif %}
+ </div>
+</section>
+
+<section class="vb-td">
+ <div class="vb-tr__inner">
+  <div class="vb-td__grid">
+   <div class="vb-td__main">
+    <div class="vb-td-box vb-td-profile" style="margin-top:0;">
+     <div class="vb-td-ava">{% if guide.image_url %}<img src="{{ guide.image_url }}" alt="{{ guide.name }}">{% endif %}</div>
+     <div class="vb-td-profile__info">
+      <div class="vb-tr-rate"><svg class="vb-tr-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 17l-5.6 3 1.3-6.2L3 9.5l6.3-.7z"/></svg> <strong>{{ guide.rating|stringformat:".2f" }}</strong> · {{ guide.reviews_count }} {{ guide.reviews_count|ru_word:"отзыв,отзыва,отзывов" }}</div>
+      {% if guide.specialization %}<div class="vb-tr-spec" style="margin:8px 0 10px;">{{ guide.specialization }}</div>{% endif %}
+      {% if guide.languages_list %}<div class="vb-tr-tags" style="margin-bottom:0;">{% for lang in guide.languages_list %}<span class="vb-tr-tag">{{ lang }}</span>{% endfor %}</div>{% endif %}
+     </div>
+    </div>
+    {% if guide.bio %}<div class="vb-td-box"><h2 class="vb-td-box__title">О гиде</h2><p class="vb-td-text">{{ guide.bio }}</p></div>{% endif %}
+   </div>
+   <aside class="vb-td-side">
+    <div class="vb-td-box">
+     {% if guide.contact_url %}<a class="vb-tr-btn" href="{{ guide.contact_url }}" target="_blank" rel="noopener">Написать гиду</a>{% else %}<div class="vb-td-note">Контакты гида скоро появятся.</div>{% endif %}
+     <button type="button" class="vb-fav-text" data-fav-type="guide" data-fav-id="{{ guide.id }}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 5 6.3 5c2 0 3.5 1.1 4.2 2.3.4.6.6.9 1.5.9s1.1-.3 1.5-.9C14.2 6.1 15.7 5 17.7 5c3.4 0 5.4 3.4 3.9 6.8C19.5 16.4 12 21 12 21z"/></svg><span data-fav-label>В избранное</span></button>
+    </div>
+   </aside>
+  </div>
+  <h2 class="vb-td-sectionhead">Экскурсии и туры гида</h2>
+  <ul class="vb-tr-grid">{% for t in tours %}{% include "landing/_tour_card.html" %}{% endfor %}</ul>
+  {% if not tours %}<div class="vb-tr-empty">У этого гида пока нет предложений.</div>{% endif %}
+ </div>
+</section>
+{% include "landing/_tourism_css.html" %}
+{% endblock %}
+{% block page_theme %}{% include "landing/_tourism_theme.html" %}{% endblock %}
